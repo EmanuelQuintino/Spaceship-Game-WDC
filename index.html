@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="author" content="Emanuel Quintino" />
+    <meta name="creator" content="Reprograma Jucás" />
+    <meta
+      name="description"
+      content="O Space Game é um jogo criado para encerramento do módulo de JavaScript no curso de Desenvolvimento Web ofertado pelo projeto Reprograma Jucás"
+    />
+    <link rel="shortcut icon" href="./images/spaceship1.gif" type="image/x-icon" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles/index.css" />
+    <script src="script.js" defer></script>
+    <title>Space Game - Reprograma Jucás</title>
+  </head>
+  <body>
+    <div class="spaceContainer">
+      <header>
+        <span class="life">Nave: 100%</span>
+        <h1>SPACE GAME - Reprograma Jucás</h1>
+        <span class="score">Score: 0000</span>
+      </header>
+
+      <main>
+        <button class="startGameButton" onclick="startGame()">Press START</button>
+        <div class="spaceship"></div>
+      </main>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,31 @@
+:root {
+  font-size: 62.5%;
+
+  --color-light-200: #f2f2f2f2;
+  --color-light-400: #e5e5e5e5;
+  --color-dark-400: #000000;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+
+  font-family: "Press Start 2P", system-ui;
+  font-size: 1.6rem;
+  color: var(--color-light-400);
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+button {
+  border: none;
+  background: none;
+  color: var(--color-light-400);
+
+  &:hover {
+    cursor: pointer;
+  }
+}
