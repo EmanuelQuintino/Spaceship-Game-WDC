@@ -10,38 +10,32 @@
   overflow: hidden;
 }
 
-header {
-  padding: 2.4rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-evenly;
+.gamePage {
+  display: none;
 
-  h1,
-  span {
-    font-weight: 400;
-    text-shadow: 1px 1px 2px var(--color-dark-400);
+  header {
+    padding: 3.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    h1,
+    span {
+      font-weight: 400;
+      text-shadow: 1px 1px 2px var(--color-dark-400);
+    }
   }
-}
 
-.startGameButton {
-  padding: 2.4rem;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-shadow: 1px 1px 2px var(--color-dark-400);
-  display: block;
-}
-
-.spaceship {
-  background: url(../images/spaceship1.gif);
-  background-repeat: repeat;
-  background-position: center;
-  background-size: cover;
-  position: absolute;
-  width: 9rem;
-  height: 9rem;
-  bottom: 0%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  .spaceship {
+    background: url(../images/spaceship1.gif);
+    background-repeat: repeat;
+    background-position: center;
+    background-size: cover;
+    position: absolute;
+    width: 9rem;
+    height: 9rem;
+    bottom: 0%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
 }

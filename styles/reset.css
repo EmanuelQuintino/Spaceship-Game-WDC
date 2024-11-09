@@ -1,9 +1,16 @@
 :root {
   font-size: 62.5%;
 
-  --color-light-200: #f2f2f2f2;
-  --color-light-400: #e5e5e5e5;
+  --color-light-100: #f9f9f9;
+  --color-light-200: #e0e0e0;
+  --color-light-300: #d1d1d1;
+  --color-light-400: #c2c2c2;
+  --color-light-500: #b3b3b3;
+  --color-light-600: #a4a4a4;
+  --color-light-700: #8c8c8c;
+  --color-light-800: #757575;
   --color-dark-400: #000000;
+  --color-primary-400: #123;
 }
 
 * {
@@ -13,19 +20,31 @@
 
   font-family: "Press Start 2P", system-ui;
   font-size: 1.6rem;
-  color: var(--color-light-400);
+  color: var(--color-light-200);
 
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
 }
 
-button {
+button,
+input {
   border: none;
   background: none;
-  color: var(--color-light-400);
+  color: var(--color-light-200);
 
   &:hover {
     cursor: pointer;
   }
+}
+
+.srOnly {
+  position: absolute;
+  width: 0.1rem;
+  height: 0.1rem;
+  margin: -0.1rem;
+  border-width: 0;
+  overflow: hidden;
+  color: transparent;
+  clip: rect(0, 0, 0, 0);
 }

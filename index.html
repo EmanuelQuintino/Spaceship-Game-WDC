@@ -22,16 +22,59 @@
   </head>
   <body>
     <div class="spaceContainer">
-      <header>
-        <span class="life">Nave: 100%</span>
-        <h1>SPACE GAME - Reprograma Jucás</h1>
-        <span class="score">Score: 0000</span>
-      </header>
+      <aside class="startGameContainer">
+        <h1>SPACE GAME</h1>
 
-      <main>
-        <button class="startGameButton" onclick="startGame()">Press START</button>
+        <img
+          src="./images/logo-reprograma-jucas.png"
+          alt="Reprograma Jucás"
+          class="logoRJ"
+        />
+
+        <form id="formStart">
+          <label for="name" class="srOnly">Nome: </label>
+          <input type="text" id="name" placeholder="Digite seu nome" autofocus required />
+        </form>
+
+        <button class="startGameButton" type="submit" form="formStart">Novo Jogo</button>
+
+        <footer>
+          <button type="button" class="buttonRank">Rank</button>
+        </footer>
+      </aside>
+
+      <main class="gamePage">
+        <header>
+          <span class="life">Nave: 100%</span>
+          <span class="score">Score: 00000</span>
+        </header>
+
         <div class="spaceship"></div>
       </main>
+
+      <!-- <aside class="rankContainer">
+        <button class="backButton">&lt; voltar</button>
+
+        <section>
+          <h1>Rank</h1>
+          <table class="tableRank">
+            <thead>
+              <tr>
+                <th>N°</th>
+                <th>Nome</th>
+                <th>Tempo</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>Emanuel</td>
+                <td>01:23</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+      </aside> -->
     </div>
   </body>
 </html>

@@ -1,6 +1,8 @@
 const spaceContainer = document.querySelector(".spaceContainer");
+const startGameContainer = document.querySelector(".startGameContainer");
+const formStart = document.querySelector("#formStart");
+const gamePage = document.querySelector(".gamePage");
 const spaceship = document.querySelector(".spaceship");
-const startGameButton = document.querySelector(".startGameButton");
 
 const spaceContainerWidth = spaceContainer.offsetWidth;
 const spaceContainerHeight = spaceContainer.offsetHeight;
@@ -70,19 +72,16 @@ function spaceshipMove() {
 }
 
 function startGame() {
-  if (gameOver) {
-    document.addEventListener("keyup", holdKey);
-    document.addEventListener("keydown", pressKey);
+  document.addEventListener("keyup", holdKey);
+  document.addEventListener("keydown", pressKey);
 
-    checkMoveSpaceship = setInterval(spaceshipMove, 20);
+  checkMoveSpaceship = setInterval(spaceshipMove, 20);
 
-    startGameButton.style.display = "none";
-  }
-
-  gameOver = false;
+  startGameContainer.style.display = "none";
+  gamePage.style.display = "block";
 }
 
-let gameOver = true;
-addEventListener("keypress", (key) => {
-  if (key.code == "Enter") startGame();
+formStart.addEventListener("submit", (event) => {
+  event.preventDefault();
+  startGame();
 });

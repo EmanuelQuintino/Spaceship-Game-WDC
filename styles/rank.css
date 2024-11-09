@@ -1,0 +1,58 @@
+aside .backButton {
+  margin-top: 7.2rem;
+  font-size: clamp(1rem, 2.5vw, 1.6rem);
+}
+
+main {
+  max-width: 72rem;
+  margin: 0 auto;
+}
+
+h1 {
+  font-size: clamp(2.4rem, 4.5vw, 3.2rem);
+  text-align: center;
+  color: #e8d141;
+  margin-top: 7.2rem;
+}
+
+table {
+  width: 100%;
+  margin: 0 auto;
+  border-collapse: collapse;
+  margin-top: 4.2rem;
+  font-size: clamp(0.8rem, 2.5vw, 1.6rem);
+}
+
+th,
+td {
+  border: 2px solid #aaa;
+  padding: 1rem 1.6rem;
+}
+
+th {
+  font-weight: 500;
+  background: #888b;
+}
+
+tr {
+  transition: background 100ms;
+}
+
+tr:hover {
+  background: #8888;
+}
+
+td:nth-child(odd) {
+  text-align: center;
+}
+
+@media (min-width: 768px) {
+  aside .backButton {
+    margin-top: 3.2rem;
+  }
+
+  h1,
+  table {
+    margin-top: 2.4rem;
+  }
+}
