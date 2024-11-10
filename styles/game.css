@@ -28,6 +28,8 @@
     background-position: center;
     background-size: cover;
     position: absolute;
+    bottom: calc(0% + 45px);
+    left: calc(50% - 45px);
     width: 9rem;
     height: 9rem;
   }
@@ -45,7 +47,7 @@
   transform: translateX(-50%);
 }
 
-.shot {
+.shotSpecial {
   position: absolute;
   z-index: 1;
   background: var(--color-secondary-400);
