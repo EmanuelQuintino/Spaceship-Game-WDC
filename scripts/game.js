@@ -29,11 +29,11 @@ const pressKey = (key) => {
       break;
     case "ArrowLeft":
       spaceshipPositionX = -1;
-      spaceship.style.transform = "rotate(-10deg)";
+      spaceship.style.transform = "rotate(-15deg)";
       break;
     case "ArrowRight":
       spaceshipPositionX = 1;
-      spaceship.style.transform = "rotate(10deg)";
+      spaceship.style.transform = "rotate(15deg)";
       break;
     default:
       break;
