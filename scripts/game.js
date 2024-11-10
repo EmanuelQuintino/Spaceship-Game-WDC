@@ -12,77 +12,79 @@ const spaceshipHeight = spaceship.offsetHeight;
 
 const spaceshipSpeed = 10;
 
-let spaceshipPositionX = 0;
-let spaceshipPositionY = 0;
-let spaceshipMoveX = spaceContainerWidth / 2;
-let spaceshipMoveY = 0;
+let positionX = 0;
+let positionY = 0;
+let moveX = spaceContainerWidth / 2;
+let moveY = 0;
 let life = 100;
 let score = 0;
 
-const pressKey = (key) => {
+function pressKey(key) {
   switch (key.code) {
     case "ArrowUp":
-      spaceshipPositionY = 1;
+    case "KeyW":
+      positionY = 1;
       break;
     case "ArrowDown":
-      spaceshipPositionY = -1;
+    case "KeyS":
+      positionY = -1;
       break;
     case "ArrowLeft":
-      spaceshipPositionX = -1;
+    case "KeyA":
+      positionX = -1;
       spaceship.style.transform = "rotate(-15deg)";
       break;
     case "ArrowRight":
-      spaceshipPositionX = 1;
+    case "KeyD":
+      positionX = 1;
       spaceship.style.transform = "rotate(15deg)";
       break;
     default:
       break;
   }
-};
+}
 
-const holdKey = (key) => {
+function holdKey(key) {
   switch (key.code) {
     case "ArrowUp":
     case "ArrowDown":
-      spaceshipPositionY = 0;
+    case "KeyW":
+    case "KeyS":
+      positionY = 0;
       spaceship.style.transform = "rotate(0deg)";
       break;
     case "ArrowLeft":
     case "ArrowRight":
-      spaceshipPositionX = 0;
+    case "KeyA":
+    case "KeyD":
+      positionX = 0;
       spaceship.style.transform = "rotate(0deg)";
       break;
     default:
       break;
   }
-};
+}
 
 function spaceshipMove() {
-  spaceshipMoveX += spaceshipPositionX * spaceshipSpeed;
-  spaceshipMoveY += spaceshipPositionY * spaceshipSpeed;
+  moveX += positionX * spaceshipSpeed;
+  moveY += positionY * spaceshipSpeed;
 
-  // screen limit
   const descontScreenLimit = spaceshipWidth / 2;
 
-  // X: left, right
-  if (spaceshipMoveX < descontScreenLimit) {
-    spaceshipMoveX = descontScreenLimit;
-  } else if (spaceshipMoveX + descontScreenLimit > spaceContainerWidth) {
-    spaceshipMoveX = spaceContainerWidth - descontScreenLimit;
-  }
+  // limit X: left, right
+  moveX = Math.max(
+    descontScreenLimit,
+    Math.min(moveX, spaceContainerWidth - descontScreenLimit)
+  );
 
-  // Y: top, bottom
-  if (spaceshipMoveY < -descontScreenLimit) {
-    spaceshipMoveY = -descontScreenLimit;
-  } else if (
-    spaceshipMoveY + spaceshipHeight + descontScreenLimit >
-    spaceContainerHeight
-  ) {
-    spaceshipMoveY = spaceContainerHeight - spaceshipHeight - descontScreenLimit;
-  }
+  // limit Y: top, bottom
+  moveY = Math.max(
+    -descontScreenLimit,
+    Math.min(moveY, spaceContainerHeight - spaceshipHeight - descontScreenLimit)
+  );
 
-  spaceship.style.left = spaceshipMoveX - 50 + "px";
-  spaceship.style.bottom = spaceshipMoveY + 50 + "px";
+  spaceship.style.left = moveX - descontScreenLimit + "px";
+  spaceship.style.bottom = moveY + descontScreenLimit + "px";
 }
 
 function setPlayerName() {
