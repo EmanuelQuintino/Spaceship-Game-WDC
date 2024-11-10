@@ -29,11 +29,11 @@ const pressKey = (key) => {
       break;
     case "ArrowLeft":
       spaceshipPositionX = -1;
-      spaceship.style.transform = "rotate(-10deg) translateX(-50%)";
+      spaceship.style.transform = "rotate(-10deg) translate(-50%, -50%)";
       break;
     case "ArrowRight":
       spaceshipPositionX = 1;
-      spaceship.style.transform = "rotate(10deg) translateX(-50%)";
+      spaceship.style.transform = "rotate(10deg) translate(-50%, -50%)";
       break;
     default:
       break;
@@ -45,12 +45,12 @@ const holdKey = (key) => {
     case "ArrowUp":
     case "ArrowDown":
       spaceshipPositionY = 0;
-      spaceship.style.transform = "rotate(0deg) translateX(-50%)";
+      spaceship.style.transform = "rotate(0deg) translate(-50%, -50%)";
       break;
     case "ArrowLeft":
     case "ArrowRight":
       spaceshipPositionX = 0;
-      spaceship.style.transform = "rotate(0deg) translateX(-50%)";
+      spaceship.style.transform = "rotate(0deg) translate(-50%, -50%)";
       break;
     default:
       break;
@@ -61,18 +61,24 @@ function spaceshipMove() {
   spaceshipMoveX += spaceshipPositionX * spaceshipSpeed;
   spaceshipMoveY += spaceshipPositionY * spaceshipSpeed;
 
+  // screen limit
+  const descontScreenLimit = 50;
+
   // X: left, right
-  if (spaceshipMoveX < 0) {
-    spaceshipMoveX = 0;
-  } else if (spaceshipMoveX > spaceContainerWidth - spaceshipWidth) {
-    spaceshipMoveX = spaceContainerWidth - spaceshipWidth;
+  if (spaceshipMoveX < descontScreenLimit) {
+    spaceshipMoveX = descontScreenLimit;
+  } else if (spaceshipMoveX + descontScreenLimit > spaceContainerWidth) {
+    spaceshipMoveX = spaceContainerWidth - descontScreenLimit;
   }
 
   // Y: top, bottom
-  if (spaceshipMoveY < 0) {
-    spaceshipMoveY = 0;
-  } else if (spaceshipMoveY + spaceshipHeight > spaceContainerHeight) {
-    spaceshipMoveY = spaceContainerHeight - spaceshipHeight;
+  if (spaceshipMoveY < -descontScreenLimit) {
+    spaceshipMoveY = -descontScreenLimit;
+  } else if (
+    spaceshipMoveY + spaceshipHeight + descontScreenLimit >
+    spaceContainerHeight
+  ) {
+    spaceshipMoveY = spaceContainerHeight - spaceshipHeight - descontScreenLimit;
   }
 
   spaceship.style.left = spaceshipMoveX + "px";
