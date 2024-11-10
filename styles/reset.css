@@ -10,7 +10,9 @@
   --color-light-700: #8c8c8c;
   --color-light-800: #757575;
   --color-dark-400: #000000;
-  --color-primary-400: #123;
+  --color-primary-400: #056cf2;
+  --color-primary-500: #2793f2;
+  --color-secondary-400: #e8d141;
 }
 
 * {
@@ -25,6 +27,17 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+}
+
+body {
+  background: url(../images/space.png);
+  background-repeat: repeat;
+  background-position: center;
+  background-size: cover;
+  animation: moveBackground 240s linear infinite;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
 }
 
 button,
@@ -47,4 +60,13 @@ input {
   overflow: hidden;
   color: transparent;
   clip: rect(0, 0, 0, 0);
+}
+
+@keyframes moveBackground {
+  0% {
+    background-position: 0 100%;
+  }
+  100% {
+    background-position: 0 0;
+  }
 }

@@ -1,8 +1,8 @@
 const spaceContainer = document.querySelector(".spaceContainer");
-const startGameContainer = document.querySelector(".startGameContainer");
-const formStart = document.querySelector("#formStart");
-const gamePage = document.querySelector(".gamePage");
 const spaceship = document.querySelector(".spaceship");
+const playerName = document.querySelector(".name");
+const playerLife = document.querySelector(".life");
+const playerScore = document.querySelector(".score");
 
 const spaceContainerWidth = spaceContainer.offsetWidth;
 const spaceContainerHeight = spaceContainer.offsetHeight;
@@ -16,6 +16,8 @@ let spaceshipPositionX = 0;
 let spaceshipPositionY = 0;
 let spaceshipMoveX = spaceContainerWidth / 2;
 let spaceshipMoveY = 0;
+let life = 100;
+let score = 0;
 
 const pressKey = (key) => {
   switch (key.code) {
@@ -37,12 +39,17 @@ const pressKey = (key) => {
 };
 
 const holdKey = (key) => {
-  if (key.code == "ArrowUp" || key.code == "ArrowDown") {
-    spaceshipPositionY = 0;
-  }
-
-  if (key.code == "ArrowLeft" || key.code == "ArrowRight") {
-    spaceshipPositionX = 0;
+  switch (key.code) {
+    case "ArrowUp":
+    case "ArrowDown":
+      spaceshipPositionY = 0;
+      break;
+    case "ArrowLeft":
+    case "ArrowRight":
+      spaceshipPositionX = 0;
+      break;
+    default:
+      break;
   }
 };
 
@@ -52,12 +59,15 @@ function spaceshipMove() {
 
   // screen limit
   const descontScreenLimit = 50;
+
+  // X: left, right
   if (spaceshipMoveX < descontScreenLimit) {
     spaceshipMoveX = descontScreenLimit;
   } else if (spaceshipMoveX + descontScreenLimit > spaceContainerWidth) {
     spaceshipMoveX = spaceContainerWidth - descontScreenLimit;
   }
 
+  // Y: top, bottom
   if (spaceshipMoveY < -descontScreenLimit) {
     spaceshipMoveY = -descontScreenLimit;
   } else if (
@@ -71,17 +81,35 @@ function spaceshipMove() {
   spaceship.style.bottom = spaceshipMoveY + "px";
 }
 
-function startGame() {
-  document.addEventListener("keyup", holdKey);
-  document.addEventListener("keydown", pressKey);
+function setPlayerName() {
+  const storagePlayerName = localStorage.getItem("@spaceGame:playerName");
 
-  checkMoveSpaceship = setInterval(spaceshipMove, 20);
-
-  startGameContainer.style.display = "none";
-  gamePage.style.display = "block";
+  playerName.innerHTML = storagePlayerName;
 }
 
-formStart.addEventListener("submit", (event) => {
-  event.preventDefault();
-  startGame();
-});
+function setPlayerLife(damage) {
+  if (damage) {
+    const criticalDamage = Math.ceil(damage * (Math.random() + 1));
+    life -= criticalDamage;
+  }
+
+  if (life < 25) {
+    playerLife.style.color = "red";
+  }
+
+  playerLife.innerHTML = `Nave ${life < 0 ? 0 : life}%`;
+}
+
+function setPlayerScore(points) {
+  score += points;
+  playerScore.innerHTML = String(score).padStart(9, "0");
+}
+
+document.addEventListener("keydown", pressKey);
+document.addEventListener("keyup", holdKey);
+
+checkMoveSpaceship = setInterval(spaceshipMove, 20);
+
+setPlayerName();
+setPlayerLife(25);
+setPlayerScore(150);

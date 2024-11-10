@@ -16,30 +16,34 @@
       href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="./styles/start.css" />
-    <script src="./scripts/start.js" defer></script>
+    <link rel="stylesheet" href="../styles/rank.css" />
+    <script src="../scripts/rank.js" defer></script>
     <title>Space Game - Reprograma Jucás</title>
   </head>
   <body>
-    <main class="startGameContainer">
-      <img
-        src="./images/logo-reprograma-jucas.png"
-        alt="Reprograma Jucás"
-        class="logoRJ"
-      />
-
-      <h1>SPACE GAME</h1>
-
-      <form id="newGameForm">
-        <label for="name" class="srOnly">Nome:</label>
-        <input type="text" id="name" placeholder="Digite seu nome" autofocus />
-      </form>
-
-      <button class="startGameButton" type="submit" form="newGameForm">Novo Jogo</button>
-
-      <footer>
-        <button type="button" class="buttonRank">Rank</button>
-      </footer>
-    </main>
+    <div class="container">
+      <aside>
+        <button class="backButton">&lt; voltar</button>
+      </aside>
+      <main>
+        <h1>Rank</h1>
+        <table class="tableRank">
+          <thead>
+            <tr>
+              <th>N°</th>
+              <th>Nome</th>
+              <th>Score</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>Emanuel</td>
+              <td>1234567</td>
+            </tr>
+          </tbody>
+        </table>
+      </main>
+    </div>
   </body>
 </html>

@@ -1,3 +1,5 @@
+@import url(./reset.css);
+
 .startGameContainer {
   margin-top: 3.2rem;
   max-width: 42rem;
@@ -14,6 +16,7 @@
     text-align: center;
     font-size: 2.4rem;
     text-shadow: 1px 1px 2px var(--color-dark-400);
+    color: var(--color-secondary-400);
   }
 
   img {
@@ -33,7 +36,17 @@
     padding: 1.6rem;
     border-radius: 0.8rem;
     text-shadow: 1px 1px 2px var(--color-dark-400);
-    background: var(--color-primary-400);
+    background: linear-gradient(
+      200deg,
+      var(--color-primary-400),
+      var(--color-primary-500)
+    );
+    transition: filter 200ms;
+
+    &:hover {
+      cursor: pointer;
+      filter: brightness(1.05);
+    }
   }
 
   & .buttonRank {

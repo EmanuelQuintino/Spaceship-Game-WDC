@@ -1,17 +1,9 @@
+@import url(reset.css);
+
 .spaceContainer {
   position: relative;
-  background: url(../images/space.png);
-  background-repeat: repeat;
-  background-position: center;
-  background-size: cover;
-  animation: moveBackground 240s linear infinite;
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden;
-}
-
-.gamePage {
-  display: none;
+  height: 100%;
+  width: 100%;
 
   header {
     padding: 3.2rem;
@@ -19,7 +11,7 @@
     align-items: center;
     justify-content: space-between;
 
-    h1,
+    div,
     span {
       font-weight: 400;
       text-shadow: 1px 1px 2px var(--color-dark-400);
@@ -28,7 +20,7 @@
 
   .spaceship {
     background: url(../images/spaceship1.gif);
-    background-repeat: repeat;
+    background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
     position: absolute;

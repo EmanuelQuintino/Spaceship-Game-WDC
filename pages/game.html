@@ -16,30 +16,23 @@
       href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="./styles/start.css" />
-    <script src="./scripts/start.js" defer></script>
+    <link rel="stylesheet" href="../styles/game.css" />
+    <script src="../scripts/game.js" defer></script>
     <title>Space Game - Reprograma Jucás</title>
   </head>
   <body>
-    <main class="startGameContainer">
-      <img
-        src="./images/logo-reprograma-jucas.png"
-        alt="Reprograma Jucás"
-        class="logoRJ"
-      />
+    <div class="spaceContainer">
+      <header>
+        <div class="life">Nave 100%</div>
+        <div>
+          <span class="name">Nome</span>
+          <span class="score">000000000</span>
+        </div>
+      </header>
 
-      <h1>SPACE GAME</h1>
-
-      <form id="newGameForm">
-        <label for="name" class="srOnly">Nome:</label>
-        <input type="text" id="name" placeholder="Digite seu nome" autofocus />
-      </form>
-
-      <button class="startGameButton" type="submit" form="newGameForm">Novo Jogo</button>
-
-      <footer>
-        <button type="button" class="buttonRank">Rank</button>
-      </footer>
-    </main>
+      <main>
+        <div class="spaceship"></div>
+      </main>
+    </div>
   </body>
 </html>
