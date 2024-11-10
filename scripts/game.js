@@ -95,6 +95,8 @@ function setPlayerLife(damage) {
   if (damage) {
     const criticalDamage = Math.ceil(damage * (Math.random() + 1));
     life -= criticalDamage;
+  } else {
+    life -= 20;
   }
 
   if (life < 25) {
