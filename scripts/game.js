@@ -11,7 +11,6 @@ const spaceshipWidth = spaceship.offsetWidth;
 const spaceshipHeight = spaceship.offsetHeight;
 
 const spaceshipSpeed = 10;
-const enemySpaceshipSpeed = 2;
 const shotSpeed = 200;
 
 let isShooting = false;
@@ -82,24 +81,27 @@ class EnemySpaceship {
   constructor(enemyNumber) {
     this.x = 0;
     this.y = 0;
-    this.baseX = Math.random() * 300;
-    this.speed = Math.ceil(Math.random() * 5 + 5); // add 5 in range
+    this.baseX = Math.ceil(Math.random() * spaceContainerWidth);
+    this.speed = Math.ceil(Math.random() * 5 + 5) / 10; // add 5 in range
 
     this.element = document.createElement("img");
     this.element.src = `../images/enemy${enemyNumber}.gif`;
     this.element.alt = `enemy${enemyNumber}.gif`;
 
+    this.element.style.position = "absolute";
+    this.element.style.top = "-100px";
+
     document.querySelector(".enemies").appendChild(this.element);
   }
 
   fly() {
-    this.y += this.speed / 10;
-    this.x = Math.cos(this.y / 10) * 20 + this.baseX;
+    this.y += this.speed;
+    this.x = Math.cos(this.y / 20) * 50 + this.baseX;
 
     this.element.style.transform = `translate3d(${this.x}px, ${this.y}px, 0)`;
 
-    if (this.y > spaceContainerHeight) {
-      spaceContainer.removeChild(this.element);
+    if (this.y - 100 > spaceContainerHeight) {
+      // spaceContainer.removeChild(this.element);
       enemies.shift();
     }
   }
@@ -206,7 +208,7 @@ setInterval(() => {
 
 spaceshipMove();
 spaceshipShoots();
-animateEnemies();
+// animateEnemies();
 setPlayerName();
 setPlayerLife(25);
 setPlayerScore(150);

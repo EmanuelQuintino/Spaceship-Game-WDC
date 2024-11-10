@@ -38,22 +38,22 @@
 .shot {
   position: absolute;
   z-index: 1;
-  background: var(--color-primary-500);
-  box-shadow: 0 0 10px 2px var(--color-primary-500);
-  width: 1rem;
-  height: 4rem;
+  background: var(--color-secondary-400);
+  box-shadow: 0 0 10px 2px var(--color-secondary-400);
+  width: 0.5rem;
+  height: 2rem;
   margin: 0 auto;
   border-radius: 10%;
   transform: translateX(-50%);
 }
 
-.shotSpecial {
+.specialShot {
   position: absolute;
   z-index: 1;
-  background: var(--color-secondary-400);
-  box-shadow: 0 0 10px 2px var(--color-secondary-400);
-  width: 0.5rem;
-  height: 2rem;
+  background: var(--color-primary-500);
+  box-shadow: 0 0 10px 2px var(--color-light-200);
+  width: 1rem;
+  height: 4rem;
   margin: 0 auto;
   border-radius: 10%;
   transform: translateX(-50%);
