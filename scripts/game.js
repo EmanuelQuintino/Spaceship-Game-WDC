@@ -11,6 +11,9 @@ const spaceshipWidth = spaceship.offsetWidth;
 const spaceshipHeight = spaceship.offsetHeight;
 
 const spaceshipSpeed = 10;
+const shotSpeed = 200;
+
+let isShooting = false;
 
 let positionX = 0;
 let positionY = 0;
@@ -18,52 +21,6 @@ let moveX = spaceContainerWidth / 2;
 let moveY = 0;
 let life = 100;
 let score = 0;
-
-function pressKey(key) {
-  switch (key.code) {
-    case "ArrowUp":
-    case "KeyW":
-      positionY = 1;
-      break;
-    case "ArrowDown":
-    case "KeyS":
-      positionY = -1;
-      break;
-    case "ArrowLeft":
-    case "KeyA":
-      positionX = -1;
-      spaceship.style.transform = "rotate(-15deg)";
-      break;
-    case "ArrowRight":
-    case "KeyD":
-      positionX = 1;
-      spaceship.style.transform = "rotate(15deg)";
-      break;
-    default:
-      break;
-  }
-}
-
-function holdKey(key) {
-  switch (key.code) {
-    case "ArrowUp":
-    case "ArrowDown":
-    case "KeyW":
-    case "KeyS":
-      positionY = 0;
-      spaceship.style.transform = "rotate(0deg)";
-      break;
-    case "ArrowLeft":
-    case "ArrowRight":
-    case "KeyA":
-    case "KeyD":
-      positionX = 0;
-      spaceship.style.transform = "rotate(0deg)";
-      break;
-    default:
-      break;
-  }
-}
 
 function spaceshipMove() {
   moveX += positionX * spaceshipSpeed;
@@ -85,6 +42,37 @@ function spaceshipMove() {
 
   spaceship.style.left = moveX - descontScreenLimit + "px";
   spaceship.style.bottom = moveY + descontScreenLimit + "px";
+
+  requestAnimationFrame(spaceshipMove);
+}
+
+function createShot() {
+  const shot = document.createElement("div");
+  shot.classList.add("shot");
+  shot.style.left = moveX + "px";
+  shot.style.bottom = moveY + spaceshipHeight + spaceshipHeight / 4 + "px";
+  spaceContainer.appendChild(shot);
+
+  const shootSound = new Audio("../audios/shoot.mp3");
+  shootSound.play();
+
+  isShooting = false;
+}
+
+function spaceshipShoots() {
+  const shoots = document.querySelectorAll(".shot");
+
+  shoots.forEach((shot) => {
+    let shotBottom = parseInt(shot.style.bottom.replace("px", ""), 10) || 0;
+    shotBottom += shotSpeed / 10;
+    shot.style.bottom = `${shotBottom}px`;
+
+    if (shotBottom > spaceContainerHeight) {
+      spaceContainer.removeChild(shot);
+    }
+  });
+
+  requestAnimationFrame(spaceshipShoots);
 }
 
 function setPlayerName() {
@@ -113,11 +101,67 @@ function setPlayerScore(points) {
   playerScore.innerHTML = String(score).padStart(9, "0");
 }
 
-document.addEventListener("keydown", pressKey);
-document.addEventListener("keyup", holdKey);
+function gameControls(key) {
+  switch (key.code) {
+    case "ArrowUp":
+    case "KeyW":
+      positionY = 1;
+      break;
+    case "ArrowDown":
+    case "KeyS":
+      positionY = -1;
+      break;
+    case "ArrowLeft":
+    case "KeyA":
+      positionX = -1;
+      spaceship.style.transform = "rotate(-15deg)";
+      break;
+    case "ArrowRight":
+    case "KeyD":
+      positionX = 1;
+      spaceship.style.transform = "rotate(15deg)";
+      break;
+    case "Space":
+      if (isShooting) {
+        createShot();
+      }
+    default:
+      break;
+  }
+}
 
-checkMoveSpaceship = setInterval(spaceshipMove, 20);
+function gameControlsCancel(key) {
+  switch (key.code) {
+    case "ArrowUp":
+    case "ArrowDown":
+    case "KeyW":
+    case "KeyS":
+      positionY = 0;
+      spaceship.style.transform = "rotate(0deg)";
+      break;
+    case "ArrowLeft":
+    case "ArrowRight":
+    case "KeyA":
+    case "KeyD":
+      positionX = 0;
+      spaceship.style.transform = "rotate(0deg)";
+      break;
+    case "Space":
+      isShooting = false;
+    default:
+      break;
+  }
+}
 
+document.addEventListener("keydown", gameControls);
+document.addEventListener("keyup", gameControlsCancel);
+
+setInterval(() => {
+  isShooting = true;
+}, shotSpeed);
+
+spaceshipMove();
+spaceshipShoots();
 setPlayerName();
 setPlayerLife(25);
 setPlayerScore(150);
