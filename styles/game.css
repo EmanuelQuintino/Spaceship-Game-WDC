@@ -56,3 +56,10 @@
   border-radius: 10%;
   transform: translateX(-50%);
 }
+
+.enemies {
+  img {
+    width: 9rem;
+    height: 9rem;
+  }
+}
