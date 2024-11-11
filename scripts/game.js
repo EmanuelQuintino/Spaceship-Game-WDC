@@ -10,13 +10,13 @@ const spaceContainerHeight = spaceContainer.offsetHeight;
 const spaceshipWidth = spaceship.offsetWidth;
 const spaceshipHeight = spaceship.offsetHeight;
 
-const spaceshipSpeed = 10;
-const shotSpeed = 200;
-const enemiesDifficulty = 1; // from 1 to 5
+const spaceshipSpeed = 10; // 1px to upper
+const shotSpeed = 10; // shoots per second
+const enemiesDifficulty = 1; // 1 to upper
 
 let enemies = [];
 let GameOver = false;
-let isShooting = false;
+let canShoot = true;
 let positionX = 0;
 let positionY = 0;
 let moveX = spaceContainerWidth / 2;
@@ -51,29 +51,40 @@ function spaceshipMove() {
 }
 
 function createShot() {
-  const shot = document.createElement("div");
-  shot.classList.add("shot");
-  shot.style.left = moveX + "px";
-  shot.style.bottom = moveY + spaceshipHeight + spaceshipHeight / 4 + "px";
-  spaceContainer.appendChild(shot);
+  if (canShoot) {
+    const shot = document.createElement("div");
+    shot.classList.add("shot");
+    shot.style.left = moveX + "px";
+    shot.style.bottom = moveY + spaceshipHeight + spaceshipHeight / 4 + "px";
+    spaceContainer.appendChild(shot);
 
-  const shootSound = new Audio("../audios/shoot.mp3");
-  shootSound.play();
+    const shootSound = new Audio("../audios/shoot.mp3");
+    shootSound.play();
 
-  isShooting = false;
+    canShoot = false;
+    setTimeout(() => {
+      canShoot = true;
+    }, 1000 / shotSpeed);
+  }
 }
 
 function spaceshipShoots() {
   const shoots = document.querySelectorAll(".shot");
 
   shoots.forEach((shot) => {
-    let shotBottom = parseInt(shot.style.bottom.replace("px", ""), 10) || 0;
-    shotBottom += shotSpeed / 10;
-    shot.style.bottom = `${shotBottom}px`;
+    let shotComputedStyle = getComputedStyle(shot);
 
-    if (shotBottom > spaceContainerHeight) {
-      spaceContainer.removeChild(shot);
-    }
+    const yArray = shotComputedStyle.transform.split(",");
+    const yString = yArray[yArray.length - 1];
+
+    const x = Number(shotComputedStyle.left.replace("px", ""));
+    const y = Number(yString.trim().replace(")", ""));
+
+    console.log({ x, y });
+
+    shot.addEventListener("animationend", () => {
+      shot.remove();
+    });
   });
 
   requestAnimationFrame(spaceshipShoots);
@@ -97,9 +108,9 @@ class EnemySpaceship {
   }
 
   fly() {
-    this.y += this.speed;
-    this.x = Math.cos(this.y / 1220) * 50 + this.baseX;
-    this.element.style.transform = `translate3d(${this.x}px, ${this.y}px, 0)`;
+    // this.y += this.speed;
+    // this.x = Math.cos(this.y / 1220) * 50 + this.baseX;
+    // this.element.style.transform = `translate3d(${this.x}px, ${this.y}px, 0)`;
 
     if (this.y - spaceshipHeight / 2 > spaceContainerHeight) {
       enemies = enemies.filter((enemy) => enemy != this);
@@ -144,6 +155,9 @@ function setPlayerScore(points) {
 
 function gameControls(key) {
   switch (key.code) {
+    case "Space":
+      createShot();
+      break;
     case "ArrowUp":
     case "KeyW":
       positionY = 1;
@@ -162,10 +176,6 @@ function gameControls(key) {
       positionX = 1;
       spaceship.style.transform = "rotate(15deg)";
       break;
-    case "Space":
-      if (isShooting) {
-        createShot();
-      }
     default:
       break;
   }
@@ -173,6 +183,8 @@ function gameControls(key) {
 
 function gameControlsCancel(key) {
   switch (key.code) {
+    case "Space":
+      break;
     case "ArrowUp":
     case "ArrowDown":
     case "KeyW":
@@ -187,8 +199,6 @@ function gameControlsCancel(key) {
       positionX = 0;
       spaceship.style.transform = "rotate(0deg)";
       break;
-    case "Space":
-      isShooting = false;
     default:
       break;
   }
@@ -196,10 +206,6 @@ function gameControlsCancel(key) {
 
 document.addEventListener("keydown", gameControls);
 document.addEventListener("keyup", gameControlsCancel);
-
-setInterval(() => {
-  isShooting = true;
-}, shotSpeed);
 
 const enemiesID = setInterval(() => {
   enemies.push(new EnemySpaceship(1));

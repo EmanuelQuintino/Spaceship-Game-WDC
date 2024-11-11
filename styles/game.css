@@ -45,6 +45,8 @@
   margin: 0 auto;
   border-radius: 10%;
   transform: translateX(-50%);
+  animation: shotAnimation 500ms linear;
+  animation-fill-mode: forwards;
 }
 
 .specialShot {
@@ -63,5 +65,6 @@
   img {
     width: 9rem;
     height: 9rem;
+    animation: enemySpaceshipAnimation1 2s linear infinite;
   }
 }
