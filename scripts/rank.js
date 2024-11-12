@@ -1,5 +1,5 @@
 function backPage() {
-  window.history.back();
+  window.location.replace("/");
 }
 
 function createBodyTableRank() {

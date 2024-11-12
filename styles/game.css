@@ -67,3 +67,37 @@
     height: 9rem;
   }
 }
+
+.gameOver {
+  position: absolute;
+  z-index: 100;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 2.4rem;
+  background: #0008;
+  height: 100%;
+  width: 100%;
+  display: none;
+
+  strong {
+    font-size: 3.2rem;
+  }
+
+  button {
+    margin-top: 2.4rem;
+    padding: 1.2rem;
+    border-radius: 0.8rem;
+    background: var(--color-light-200);
+    color: var(--color-dark-400);
+
+    &:hover {
+      transition: filter 300ms;
+      background: var(--color-light-300);
+    }
+  }
+}
