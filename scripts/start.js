@@ -1,6 +1,6 @@
 function handleSubmitNewGame(event) {
   event.preventDefault();
-  localStorage.setItem("@spaceGame:playerName", inputName.value);
+  localStorage.setItem("@spaceshipGame:playerName", inputName.value);
   inputName.value = "";
   window.location.href = "pages/game.html";
 }

@@ -226,7 +226,7 @@ function collisionEnemiesWithSpaceship() {
 }
 
 function setPlayerName() {
-  const storagePlayerName = localStorage.getItem("@spaceGame:playerName");
+  const storagePlayerName = localStorage.getItem("@spaceshipGame:playerName");
 
   playerName.innerHTML = storagePlayerName;
 }
@@ -310,11 +310,26 @@ function gameControlsCancel(key) {
   }
 }
 
+function saveUserScore({ name, score }) {
+  const storageRank = JSON.parse(localStorage.getItem("@spaceshipGame:rank"));
+
+  if (storageRank) {
+    localStorage.setItem(
+      "@spaceshipGame:rank",
+      JSON.stringify([...storageRank, { name, score }])
+    );
+  } else {
+    localStorage.setItem("@spaceshipGame:rank", JSON.stringify([{ name, score }]));
+  }
+}
+
 function GameOver() {
   isGameOver = true;
 
   const gameOverElement = document.querySelector(".gameOver");
   gameOverElement.style.display = "flex";
+
+  saveUserScore({ name: playerName.innerHTML, score });
 
   spaceship.style.backgroundImage = `url(../images/explosion2.gif)`;
   spaceship.style.backgroundSize = `contain`;
