@@ -95,6 +95,7 @@ class EnemySpaceship {
   constructor(enemyNumber) {
     // enemyNumber 1, 2 or 3
     this.life = enemyNumber * 100;
+    this.points = enemyNumber * 250;
     this.flyCategory = (Math.random() - 0.5) * 3; // random negative/positive number
     this.x = 0;
     this.y = 0;
@@ -175,6 +176,7 @@ function collisionEnemies() {
 
         if (enemy.life <= 0) {
           enemy.destroyEnemySpaceship();
+          setPlayerScore(enemy.points);
         }
       }
     });
@@ -264,8 +266,8 @@ document.addEventListener("keydown", gameControls);
 document.addEventListener("keyup", gameControlsCancel);
 
 const startSound = new Audio("../audios/Aero-Fighters.mp3");
+startSound.loop = true;
 startSound.play();
-startSound.loop;
 
 spaceshipMove();
 spaceshipShoots();
@@ -274,4 +276,3 @@ animateEnemies();
 collisionEnemies();
 setPlayerName();
 setPlayerLife(25);
-setPlayerScore(150);
