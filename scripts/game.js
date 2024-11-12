@@ -149,7 +149,19 @@ class EnemySpaceship {
 
 function createEnemies() {
   const intervalID = setInterval(() => {
-    enemies.push(new EnemySpaceship(1));
+    let randomTypeEnemy = Math.ceil(Math.random() * 10);
+
+    if (randomTypeEnemy < 5) {
+      randomTypeEnemy = 1; // 50%
+    } else if (randomTypeEnemy < 8) {
+      randomTypeEnemy = 1; //30%
+    } else if (randomTypeEnemy <= 10) {
+      randomTypeEnemy = 2; //20%
+    }
+
+    console.log(randomTypeEnemy);
+
+    enemies.push(new EnemySpaceship(randomTypeEnemy));
     enemiesDifficulty = score == 0 ? 1 : Math.ceil(score / 5000); // 1 more level for 5000 points
 
     if (isGameOver) clearInterval(intervalID);
@@ -185,6 +197,7 @@ function collisionEnemiesShot() {
         shotDOM.remove();
         enemy.life -= Math.ceil(shootPower * (Math.random() + 1)); // ex: shootPower * 1.2
 
+        setPlayerScore(10);
         if (enemy.life <= 0) {
           enemy.destroyEnemySpaceship();
           setPlayerScore(enemy.points);
@@ -355,6 +368,10 @@ const startSound = new Audio("../audios/aero-fighters.mp3");
 startSound.loop = true;
 startSound.volume = 1;
 startSound.play();
+
+const nextLevelSound = new Audio("../audios/next_level.mp3");
+nextLevelSound.volume = 1;
+nextLevelSound.play();
 
 spaceshipMove();
 spaceshipShoots();
