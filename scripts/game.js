@@ -17,6 +17,7 @@ const enemiesDifficulty = 1; // 1 to upper
 let enemies = [];
 let GameOver = false;
 let canShoot = true;
+let shootPower = 25; // lifeEnemy-=shootPower
 let positionX = 0;
 let positionY = 0;
 let moveX = spaceContainerWidth / 2;
@@ -80,7 +81,7 @@ function spaceshipShoots() {
     const x = Number(shotComputedStyle.left.replace("px", ""));
     const y = Number(yString.trim().replace(")", ""));
 
-    console.log({ x, y });
+    // console.log({ x, y });
 
     shot.addEventListener("animationend", () => {
       shot.remove();
@@ -92,6 +93,9 @@ function spaceshipShoots() {
 
 class EnemySpaceship {
   constructor(enemyNumber) {
+    // enemyNumber 1, 2 or 3
+    this.life = enemyNumber * 100;
+    this.flyCategory = (Math.random() - 0.5) * 3; // random negative/positive number
     this.x = 0;
     this.y = 0;
     this.baseX = Math.ceil(Math.random() * spaceContainerWidth - spaceshipWidth);
@@ -107,16 +111,37 @@ class EnemySpaceship {
     document.querySelector(".enemies").appendChild(this.element);
   }
 
-  fly() {
-    // this.y += this.speed;
-    // this.x = Math.cos(this.y / 1220) * 50 + this.baseX;
-    // this.element.style.transform = `translate3d(${this.x}px, ${this.y}px, 0)`;
+  destroyEnemySpaceship() {
+    this.element.src = `../images/explosion2.gif`;
+    enemies = enemies.filter((enemy) => enemy != this);
 
-    if (this.y - spaceshipHeight / 2 > spaceContainerHeight) {
-      enemies = enemies.filter((enemy) => enemy != this);
+    const explosionSound = new Audio("../audios/explosion1.mp3");
+    explosionSound.volume = 0.4;
+    explosionSound.play();
+
+    setTimeout(() => {
       this.element.remove();
+    }, 1000);
+  }
+
+  fly() {
+    this.y += this.speed;
+    this.x =
+      Math.cos((this.y / 100) * this.flyCategory) * 100 * this.flyCategory + this.baseX;
+    this.element.style.transform = `translate3d(${this.x}px, ${this.y}px, 0)`;
+
+    if (this.y - spaceshipHeight / 2 > spaceContainerHeight || this.life <= 0) {
+      this.destroyEnemySpaceship();
     }
   }
+}
+
+function createEnemies() {
+  const enemiesID = setInterval(() => {
+    enemies.push(new EnemySpaceship(1));
+
+    if (GameOver) clearInterval(enemiesID);
+  }, Math.ceil((Math.random() * 5) / enemiesDifficulty) * 1000);
 }
 
 function animateEnemies() {
@@ -127,6 +152,37 @@ function animateEnemies() {
   requestAnimationFrame(animateEnemies);
 }
 
+function collisionEnemies() {
+  const enemiesDOM = document.querySelectorAll(".enemies img");
+  const shootsDOM = document.querySelectorAll(".shot");
+
+  enemiesDOM.forEach((enemyDOM) => {
+    const enemy = enemies.find((enemy) => enemy.element == enemyDOM);
+    if (!enemy) return;
+
+    shootsDOM.forEach((shotDOM) => {
+      const shotRect = shotDOM.getBoundingClientRect();
+      const enemyRect = enemyDOM.getBoundingClientRect();
+
+      if (
+        enemyRect.left < shotRect.right &&
+        enemyRect.right > shotRect.left &&
+        enemyRect.top < shotRect.bottom &&
+        enemyRect.bottom > shotRect.top
+      ) {
+        shotDOM.remove();
+        enemy.life -= Math.ceil(shootPower * (Math.random() + 1)); // Ex: shootPower * 1.2
+
+        if (enemy.life <= 0) {
+          enemy.destroyEnemySpaceship();
+        }
+      }
+    });
+  });
+
+  requestAnimationFrame(collisionEnemies);
+}
+
 function setPlayerName() {
   const storagePlayerName = localStorage.getItem("@spaceGame:playerName");
 
@@ -135,7 +191,7 @@ function setPlayerName() {
 
 function setPlayerLife(damage) {
   if (damage) {
-    const criticalDamage = Math.ceil(damage * (Math.random() + 1));
+    const criticalDamage = Math.ceil(damage * (Math.random() + 1)); // Ex: damage * 1.2
     life -= criticalDamage;
   } else {
     life -= 20;
@@ -207,15 +263,15 @@ function gameControlsCancel(key) {
 document.addEventListener("keydown", gameControls);
 document.addEventListener("keyup", gameControlsCancel);
 
-const enemiesID = setInterval(() => {
-  enemies.push(new EnemySpaceship(1));
-
-  if (GameOver) clearInterval(enemiesID);
-}, Math.ceil((Math.random() * 5) / enemiesDifficulty) * 1000);
+const startSound = new Audio("../audios/Aero-Fighters.mp3");
+startSound.play();
+startSound.loop;
 
 spaceshipMove();
 spaceshipShoots();
+createEnemies();
 animateEnemies();
+collisionEnemies();
 setPlayerName();
 setPlayerLife(25);
 setPlayerScore(150);
