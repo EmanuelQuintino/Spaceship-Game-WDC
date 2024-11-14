@@ -98,9 +98,10 @@ function spaceshipShoots() {
 
 class EnemySpaceship {
   constructor(enemyNumber) {
-    // enemyNumber 1, 2 or 3
-    this.life = enemyNumber * 100;
-    this.points = enemyNumber * 250;
+    this.enemyNumber = enemyNumber; // 1, 2 or 3
+    this.life = enemyNumber == 1 ? 100 : enemyNumber == 2 ? 300 : 600;
+    this.points = enemyNumber == 1 ? 250 : enemyNumber == 2 ? 500 : 1000; // to score
+    this.damage = enemyNumber == 1 ? 20 : enemyNumber == 2 ? 30 : 50;
     this.flyCategory = (Math.random() - 0.5) * 3; // random negative/positive number
     this.x = 0;
     this.y = 0;
@@ -110,6 +111,7 @@ class EnemySpaceship {
     this.element = document.createElement("img");
     this.element.src = `../images/enemy${enemyNumber}.gif`;
     this.element.alt = `enemy${enemyNumber}.gif`;
+    this.element.className = `enemy${enemyNumber}`;
 
     this.element.style.position = "absolute";
     this.element.style.top = "-100px";
@@ -121,7 +123,13 @@ class EnemySpaceship {
     this.element.src = `../images/explosion2.gif`;
     enemies = enemies.filter((enemy) => enemy != this);
 
-    const explosionSound = new Audio("../audios/explosion1.mp3");
+    let explosionSound;
+    if (this.enemyNumber == 3) {
+      explosionSound = new Audio("../audios/explosion2.mp3");
+    } else {
+      explosionSound = new Audio("../audios/explosion1.mp3");
+    }
+
     explosionSound.volume = explosionSoundVolume;
     explosionSound.play();
 
@@ -136,6 +144,7 @@ class EnemySpaceship {
       Math.cos((this.y / 100) * this.flyCategory) * 100 * this.flyCategory + this.baseX;
     this.element.style.transform = `translate3d(${this.x}px, ${this.y}px, 0)`;
 
+    // damage enemy escaped
     // if (this.y - spaceshipHeight / 2 > spaceContainerHeight || this.life <= 0) {
     //   this.destroyEnemySpaceship();
     //   setPlayerLife(10);
@@ -151,12 +160,12 @@ function createEnemies() {
   const intervalID = setInterval(() => {
     let randomTypeEnemy = Math.ceil(Math.random() * 10);
 
-    if (randomTypeEnemy < 5) {
-      randomTypeEnemy = 1; // 50%
-    } else if (randomTypeEnemy < 8) {
-      randomTypeEnemy = 1; //30%
-    } else if (randomTypeEnemy <= 10) {
-      randomTypeEnemy = 2; //20%
+    if (randomTypeEnemy <= 6) {
+      randomTypeEnemy = 1; // 60%
+    } else if (randomTypeEnemy <= 9) {
+      randomTypeEnemy = 2; // 30%
+    } else if (randomTypeEnemy == 10) {
+      randomTypeEnemy = 3; // 10%
     }
 
     console.log(randomTypeEnemy);
@@ -188,11 +197,13 @@ function collisionEnemiesShot() {
       const shotRect = shotDOM.getBoundingClientRect();
       const enemyRect = enemyDOM.getBoundingClientRect();
 
+      let discountCollision = enemy.enemyNumber == 3 ? 40 : 10;
+
       if (
         enemyRect.left < shotRect.right &&
         enemyRect.right > shotRect.left &&
-        enemyRect.top < shotRect.bottom &&
-        enemyRect.bottom > shotRect.top
+        enemyRect.top + discountCollision < shotRect.bottom &&
+        enemyRect.bottom - discountCollision > shotRect.top
       ) {
         shotDOM.remove();
         enemy.life -= Math.ceil(shootPower * (Math.random() + 1)); // ex: shootPower * 1.2
@@ -219,11 +230,13 @@ function collisionEnemiesWithSpaceship() {
 
     const enemyRect = enemyDOM.getBoundingClientRect();
 
+    let discountCollision = enemy.enemyNumber == 3 ? 40 : 20;
+
     if (
-      spaceshipRect.left + 20 < enemyRect.right &&
-      spaceshipRect.right - 20 > enemyRect.left &&
-      spaceshipRect.top + 40 < enemyRect.bottom &&
-      spaceshipRect.bottom - 40 > enemyRect.top
+      spaceshipRect.left + discountCollision < enemyRect.right &&
+      spaceshipRect.right - discountCollision > enemyRect.left &&
+      spaceshipRect.top + discountCollision * 2 < enemyRect.bottom &&
+      spaceshipRect.bottom - discountCollision * 2 > enemyRect.top
     ) {
       const explosionSound = new Audio("../audios/explosion1.mp3");
       explosionSound.volume = explosionSoundVolume;
@@ -231,7 +244,7 @@ function collisionEnemiesWithSpaceship() {
 
       enemy.destroyEnemySpaceship();
 
-      setPlayerLife(spaceshipDamage);
+      setPlayerLife(enemy.damage);
     }
   });
 
@@ -366,7 +379,7 @@ gameOverButton.addEventListener("click", () => {
 
 const startSound = new Audio("../audios/aero-fighters.mp3");
 startSound.loop = true;
-startSound.volume = 1;
+startSound.volume = 0;
 startSound.play();
 
 const nextLevelSound = new Audio("../audios/next_level.mp3");

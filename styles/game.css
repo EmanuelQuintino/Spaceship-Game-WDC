@@ -26,7 +26,7 @@
     background: url(../images/spaceship1.gif);
     background-repeat: no-repeat;
     background-position: center;
-    background-size: cover;
+    background-size: contain;
     position: absolute;
     bottom: calc(0% + 45px);
     left: calc(50% - 45px);
@@ -62,9 +62,15 @@
 }
 
 .enemies {
-  img {
+  .enemy1,
+  .enemy2 {
     width: 9rem;
     height: 9rem;
+  }
+
+  .enemy3 {
+    width: 16rem;
+    height: 16rem;
   }
 }
 
