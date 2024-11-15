@@ -73,7 +73,7 @@
   height: 2.4rem;
   aspect-ratio: 1/1;
   background-size: cover;
-  animation: chargeSpecialShotAnimation 800ms infinite ease-in-out;
+  /* animation: chargeSpecialShotAnimation 800ms infinite ease-in-out; */
 }
 
 .enemies {

@@ -14,21 +14,26 @@ const spaceshipHeight = spaceship.offsetHeight;
 const spaceshipSpeed = 10; // 1px to upper
 const shotSpeed = 10; // shoots per second
 const spaceshipDamage = 25; // -20 of life
+const timeToSpecialShot = 30 * 1000; // 30000ms
 
 let enemies = [];
 let isGameOver = false;
+let life = 100;
+let score = 0;
+let explosionSoundVolume = 0.4;
+
 let canShoot = true;
+let specialShotIsActive = false;
 let shootPower = 25; // lifeEnemy-=shootPower
+
 let positionX = 0;
 let positionY = 0;
 let moveX = spaceContainerWidth / 2;
 let moveY = 0;
+
 let enemyX = Math.random() * (spaceContainerWidth - spaceshipWidth);
 let enemyY = 100;
 let enemiesDifficulty = 1; // one by one
-let life = 100;
-let score = 0;
-let explosionSoundVolume = 0.4;
 
 function spaceshipMove() {
   if (isGameOver) return;
@@ -56,10 +61,13 @@ function spaceshipMove() {
   requestAnimationFrame(spaceshipMove);
 }
 
-function createShot() {
+function createShot(className = "shot") {
   if (canShoot) {
     const shot = document.createElement("div");
-    shot.classList.add("shot");
+    shot.classList.add(className);
+
+    if (specialShotIsActive) shot.classList.add("specialShot");
+
     shot.style.left = moveX + "px";
     shot.style.bottom = moveY + spaceshipHeight + spaceshipHeight / 4 + "px";
     spaceContainer.appendChild(shot);
@@ -75,19 +83,9 @@ function createShot() {
 }
 
 function spaceshipShoots() {
-  const shoots = document.querySelectorAll(".shot");
+  shoots = document.querySelectorAll(".shot");
 
   shoots.forEach((shot) => {
-    let shotComputedStyle = getComputedStyle(shot);
-
-    const yArray = shotComputedStyle.transform.split(",");
-    const yString = yArray[yArray.length - 1];
-
-    const x = Number(shotComputedStyle.left.replace("px", ""));
-    const y = Number(yString.trim().replace(")", ""));
-
-    // console.log({ x, y });
-
     shot.addEventListener("animationend", () => {
       shot.remove();
     });
@@ -97,8 +95,8 @@ function spaceshipShoots() {
 }
 
 class EnemySpaceship {
-  constructor(enemyNumber) {
-    this.enemyNumber = enemyNumber; // 1, 2 or 3
+  constructor(enemyNumber = 1, src, alt, className) {
+    this.enemyNumber = enemyNumber; // 1, 2 , 3 or specialCharge
     this.life = enemyNumber == 1 ? 100 : enemyNumber == 2 ? 300 : 600;
     this.points = enemyNumber == 1 ? 250 : enemyNumber == 2 ? 500 : 1000; // to score
     this.damage = enemyNumber == 1 ? 20 : enemyNumber == 2 ? 30 : 50;
@@ -107,14 +105,17 @@ class EnemySpaceship {
     this.y = 0;
     this.baseX = Math.ceil(Math.random() * spaceContainerWidth - spaceshipWidth);
     this.speed = Math.ceil(Math.random() * 5 + 5) / 10; // add 5 in a range
+    this.#createElement(src, alt, className);
+  }
 
+  #createElement(src, alt, className) {
     this.element = document.createElement("img");
-    this.element.src = `../images/enemy${enemyNumber}.gif`;
-    this.element.alt = `enemy${enemyNumber}.gif`;
-    this.element.className = `enemy${enemyNumber}`;
+    this.element.src = src;
+    this.element.alt = alt;
+    this.element.className = className;
 
     this.element.style.position = "absolute";
-    this.element.style.top = "-100px";
+    this.element.style.top = "-200px";
 
     document.querySelector(".enemies").appendChild(this.element);
   }
@@ -144,34 +145,49 @@ class EnemySpaceship {
       Math.cos((this.y / 100) * this.flyCategory) * 100 * this.flyCategory + this.baseX;
     this.element.style.transform = `translate3d(${this.x}px, ${this.y}px, 0)`;
 
-    // damage enemy escaped
-    // if (this.y - spaceshipHeight / 2 > spaceContainerHeight || this.life <= 0) {
-    //   this.destroyEnemySpaceship();
-    //   setPlayerLife(10);
-    // }
-
     if (this.y - spaceshipHeight > spaceContainerHeight || this.life <= 0) {
       this.element.remove();
     }
   }
 }
 
+class SpecialCharge extends EnemySpaceship {
+  constructor(enemyNumber, src, alt, className) {
+    super(enemyNumber, src, alt, className);
+  }
+
+  removeElement() {
+    enemies = enemies.filter((enemy) => enemy != this);
+    this.element.remove();
+  }
+}
+
 function createEnemies() {
   const intervalID = setInterval(() => {
-    let randomTypeEnemy = Math.ceil(Math.random() * 10);
+    enemiesDifficulty = score == 0 ? 1 : Math.ceil(score / 5000); // 1 more level for 5000 points
 
-    if (randomTypeEnemy <= 6) {
+    let randomTypeEnemy = Math.ceil(Math.random() * 100);
+    if (randomTypeEnemy <= 60) {
       randomTypeEnemy = 1; // 60%
-    } else if (randomTypeEnemy <= 9) {
+    } else if (randomTypeEnemy <= 90) {
       randomTypeEnemy = 2; // 30%
-    } else if (randomTypeEnemy == 10) {
-      randomTypeEnemy = 3; // 10%
+    } else if (randomTypeEnemy <= 98) {
+      randomTypeEnemy = 3; // 8%
+    } else if (randomTypeEnemy <= 100) {
+      enemies.push(
+        new SpecialCharge(1, `../images/logo-rj.png`, `logo-rj`, `chargeSpecialShot`)
+      ); // 2%
+      return;
     }
 
-    console.log(randomTypeEnemy);
-
-    enemies.push(new EnemySpaceship(randomTypeEnemy));
-    enemiesDifficulty = score == 0 ? 1 : Math.ceil(score / 5000); // 1 more level for 5000 points
+    enemies.push(
+      new EnemySpaceship(
+        randomTypeEnemy,
+        `../images/enemy${randomTypeEnemy}.gif`,
+        `enemy${randomTypeEnemy}`,
+        `enemy${randomTypeEnemy}`
+      )
+    );
 
     if (isGameOver) clearInterval(intervalID);
   }, Math.random() * 1000 + 1000 / enemiesDifficulty);
@@ -193,6 +209,8 @@ function collisionEnemiesShot() {
     const enemy = enemies.find((enemy) => enemy.element == enemyDOM);
     if (!enemy) return;
 
+    if (enemy.element.className == "chargeSpecialShot") return;
+
     shootsDOM.forEach((shotDOM) => {
       const shotRect = shotDOM.getBoundingClientRect();
       const enemyRect = enemyDOM.getBoundingClientRect();
@@ -208,7 +226,7 @@ function collisionEnemiesShot() {
         shotDOM.remove();
         enemy.life -= Math.ceil(shootPower * (Math.random() + 1)); // ex: shootPower * 1.2
 
-        setPlayerScore(10);
+        setPlayerScore(specialShotIsActive ? 20 : 10);
         if (enemy.life <= 0) {
           enemy.destroyEnemySpaceship();
           setPlayerScore(enemy.points);
@@ -238,13 +256,30 @@ function collisionEnemiesWithSpaceship() {
       spaceshipRect.top + discountCollision * 2 < enemyRect.bottom &&
       spaceshipRect.bottom - discountCollision * 2 > enemyRect.top
     ) {
-      const explosionSound = new Audio("../audios/explosion1.mp3");
-      explosionSound.volume = explosionSoundVolume;
-      explosionSound.play();
+      if (enemy.element.className == "chargeSpecialShot") {
+        const chargeSpecialShotSound = new Audio("../audios/next_level.mp3");
+        chargeSpecialShotSound.volume = 1;
+        chargeSpecialShotSound.play();
 
-      enemy.destroyEnemySpaceship();
+        specialShotIsActive = true;
+        shootPower = 100;
+        setPlayerLife(100);
+        setPlayerScore(2000);
+        enemy.removeElement();
 
-      setPlayerLife(enemy.damage);
+        setTimeout(() => {
+          specialShotIsActive = false;
+          shootPower = 25;
+        }, timeToSpecialShot);
+      } else {
+        const explosionSound = new Audio("../audios/explosion1.mp3");
+        explosionSound.volume = explosionSoundVolume;
+        explosionSound.play();
+
+        enemy.destroyEnemySpaceship();
+
+        setPlayerDamage(enemy.damage);
+      }
     }
   });
 
@@ -257,7 +292,18 @@ function setPlayerName() {
   playerName.innerHTML = storagePlayerName;
 }
 
-function setPlayerLife(damage) {
+function setPlayerLife(lifePoints) {
+  life = lifePoints;
+  playerLife.innerHTML = `Nave ${life}%`;
+
+  if (life < 30) {
+    playerLife.style.color = "red";
+  } else {
+    playerLife.style.color = "var(--color-light-200)";
+  }
+}
+
+function setPlayerDamage(damage) {
   if (damage) {
     const criticalDamage = Math.ceil(damage * (Math.random() + 1)); // ex: damage * 1.2
     life -= criticalDamage;
@@ -383,7 +429,7 @@ startSound.volume = 0;
 startSound.play();
 
 const nextLevelSound = new Audio("../audios/next_level.mp3");
-nextLevelSound.volume = 1;
+nextLevelSound.volume = 0;
 nextLevelSound.play();
 
 spaceshipMove();

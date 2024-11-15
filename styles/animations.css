@@ -22,11 +22,13 @@
     opacity: 1;
     filter: drop-shadow(0 0 4px var(--color-light-400));
   }
+
   50% {
     transform: scale(1.2);
     opacity: 0.8;
     filter: drop-shadow(0 0 8px var(--color-light-200));
   }
+
   100% {
     transform: scale(1);
     opacity: 1;
