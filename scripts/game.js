@@ -105,6 +105,7 @@ class EnemySpaceship {
     this.y = 0;
     this.baseX = Math.ceil(Math.random() * spaceContainerWidth - spaceshipWidth);
     this.speed = Math.ceil(Math.random() * 5 + 5) / 10; // add 5 in a range
+    this.offScreenElementDiscount = 200; // px
     this.#createElement(src, alt, className);
   }
 
@@ -115,7 +116,7 @@ class EnemySpaceship {
     this.element.className = className;
 
     this.element.style.position = "absolute";
-    this.element.style.top = "-200px";
+    this.element.style.top = `-${this.offScreenElementDiscount}px`;
 
     document.querySelector(".enemies").appendChild(this.element);
   }
@@ -145,7 +146,7 @@ class EnemySpaceship {
       Math.cos((this.y / 100) * this.flyCategory) * 100 * this.flyCategory + this.baseX;
     this.element.style.transform = `translate3d(${this.x}px, ${this.y}px, 0)`;
 
-    if (this.y - spaceshipHeight > spaceContainerHeight || this.life <= 0) {
+    if (this.y - this.offScreenElementDiscount > spaceContainerHeight || this.life <= 0) {
       this.element.remove();
     }
   }
