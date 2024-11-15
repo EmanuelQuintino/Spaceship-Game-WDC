@@ -11,10 +11,10 @@ const spaceContainerHeight = spaceContainer.offsetHeight;
 const spaceshipWidth = spaceship.offsetWidth;
 const spaceshipHeight = spaceship.offsetHeight;
 
-const spaceshipSpeed = 10; // 1px to upper
+const spaceshipSpeed = 10; // px to upper
 const shotSpeed = 10; // shoots per second
-const spaceshipDamage = 25; // -20 of life
-const timeToSpecialShot = 30 * 1000; // 30000ms
+const spaceshipDamage = 25; // -25 per shot
+const timeToSpecialShot = 30 * 1000; // 30000ms to the end
 
 let enemies = [];
 let isGameOver = false;
@@ -33,7 +33,8 @@ let moveY = 0;
 
 let enemyX = Math.random() * (spaceContainerWidth - spaceshipWidth);
 let enemyY = 100;
-let enemiesDifficulty = 1; // one by one
+let enemiesDifficultyLevel = 1;
+let pointsToIncrementDifficultyLevel = 2000; // 1 more level for each step points
 
 function spaceshipMove() {
   if (isGameOver) return;
@@ -165,7 +166,8 @@ class SpecialCharge extends EnemySpaceship {
 
 function createEnemies() {
   const intervalID = setInterval(() => {
-    enemiesDifficulty = score == 0 ? 1 : Math.ceil(score / 5000); // 1 more level for 5000 points
+    enemiesDifficultyLevel =
+      score == 0 ? 1 : Math.ceil(score / pointsToIncrementDifficultyLevel);
 
     let randomTypeEnemy = Math.ceil(Math.random() * 100);
     if (randomTypeEnemy <= 60) {
@@ -191,7 +193,7 @@ function createEnemies() {
     );
 
     if (isGameOver) clearInterval(intervalID);
-  }, Math.random() * 1000 + 1000 / enemiesDifficulty);
+  }, Math.random() * 1000 + 1000 / enemiesDifficultyLevel);
 }
 
 function animateEnemies() {
