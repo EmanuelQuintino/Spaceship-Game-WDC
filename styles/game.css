@@ -53,8 +53,8 @@
   position: absolute;
   z-index: 1;
   background: var(--color-primary-500);
-  box-shadow: 0 0 10px 2px var(--color-light-200);
-  width: 1rem;
+  box-shadow: 0 0 8px 2px var(--color-light-200);
+  width: 0.5rem;
   height: 4rem;
   margin: 0 auto;
   border-radius: 10%;

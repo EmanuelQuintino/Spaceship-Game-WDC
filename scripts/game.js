@@ -67,14 +67,20 @@ function createShot(className = "shot") {
     const shot = document.createElement("div");
     shot.classList.add(className);
 
-    if (specialShotIsActive) shot.classList.add("specialShot");
+    if (specialShotIsActive) {
+      shot.classList.add("specialShot");
+      const shootSound = new Audio("../audios/shootSpecial.mp3");
+      shootSound.volume = 0.2;
+      shootSound.play();
+    } else {
+      const shootSound = new Audio("../audios/shoot.mp3");
+      shootSound.volume = 1;
+      shootSound.play();
+    }
 
     shot.style.left = moveX + "px";
     shot.style.bottom = moveY + spaceshipHeight + spaceshipHeight / 4 + "px";
     spaceContainer.appendChild(shot);
-
-    const shootSound = new Audio("../audios/shoot.mp3");
-    shootSound.play();
 
     canShoot = false;
     setTimeout(() => {
