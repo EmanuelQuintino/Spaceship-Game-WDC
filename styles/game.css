@@ -53,8 +53,9 @@
   position: absolute;
   z-index: 1;
   background: var(--color-primary-500);
-  box-shadow: 0 0 8px 2px var(--color-light-200);
-  width: 0.5rem;
+  box-shadow: 0 0 10px 2px var(--color-primary-500);
+  filter: brightness(1.2);
+  width: 0.75rem;
   height: 4rem;
   margin: 0 auto;
   border-radius: 10%;
@@ -73,7 +74,7 @@
   height: 2.4rem;
   aspect-ratio: 1/1;
   background-size: cover;
-  /* animation: chargeSpecialShotAnimation 800ms infinite ease-in-out; */
+  animation: chargeSpecialShotAnimation 800ms infinite ease-in-out;
 }
 
 .enemies {

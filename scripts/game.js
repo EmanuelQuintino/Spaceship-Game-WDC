@@ -34,7 +34,7 @@ let moveY = 0;
 let enemyX = Math.random() * (spaceContainerWidth - spaceshipWidth);
 let enemyY = 100;
 let enemiesDifficultyLevel = 1;
-let pointsToIncrementDifficultyLevel = 2000; // 1 more level for each step points
+let pointsToIncrementDifficultyLevel = 1000; // 1 more level for each step points
 
 function spaceshipMove() {
   if (isGameOver) return;
@@ -70,16 +70,20 @@ function createShot(className = "shot") {
     if (specialShotIsActive) {
       shot.classList.add("specialShot");
       const shootSound = new Audio("../audios/shootSpecial.mp3");
-      shootSound.volume = 0.2;
+      shootSound.volume = 0.3;
       shootSound.play();
+
+      shot.style.left = moveX + "px";
+      shot.style.bottom = moveY + spaceshipHeight + spaceshipHeight / 8 + "px";
     } else {
       const shootSound = new Audio("../audios/shoot.mp3");
       shootSound.volume = 1;
       shootSound.play();
+
+      shot.style.left = moveX + "px";
+      shot.style.bottom = moveY + spaceshipHeight + spaceshipHeight / 4 + "px";
     }
 
-    shot.style.left = moveX + "px";
-    shot.style.bottom = moveY + spaceshipHeight + spaceshipHeight / 4 + "px";
     spaceContainer.appendChild(shot);
 
     canShoot = false;
@@ -176,16 +180,16 @@ function createEnemies() {
       score == 0 ? 1 : Math.ceil(score / pointsToIncrementDifficultyLevel);
 
     let randomTypeEnemy = Math.ceil(Math.random() * 100);
-    if (randomTypeEnemy <= 60) {
-      randomTypeEnemy = 1; // 60%
-    } else if (randomTypeEnemy <= 90) {
+    if (randomTypeEnemy <= 50) {
+      randomTypeEnemy = 1; // 50%
+    } else if (randomTypeEnemy <= 80) {
       randomTypeEnemy = 2; // 30%
-    } else if (randomTypeEnemy <= 98) {
-      randomTypeEnemy = 3; // 8%
+    } else if (randomTypeEnemy <= 95) {
+      randomTypeEnemy = 3; // 15%
     } else if (randomTypeEnemy <= 100) {
       enemies.push(
         new SpecialCharge(1, `../images/logo-rj.png`, `logo-rj`, `chargeSpecialShot`)
-      ); // 2%
+      ); // 5%
       return;
     }
 
