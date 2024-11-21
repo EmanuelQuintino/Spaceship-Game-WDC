@@ -115,7 +115,7 @@ class EnemySpaceship {
     this.x = 0;
     this.y = 0;
     this.baseX = Math.ceil(Math.random() * spaceContainerWidth - spaceshipWidth);
-    this.speed = Math.ceil(Math.random() * 5 + 5) / 10; // add 5 in a range
+    this.speed = (Math.ceil(Math.random() * 5 + 5) / 10) * enemiesDifficultyLevel; // add 5 in a range
     this.offScreenElementDiscount = 200; // px
     this.#createElement(src, alt, className);
   }
@@ -154,7 +154,8 @@ class EnemySpaceship {
   fly() {
     this.y += this.speed;
     this.x =
-      Math.cos((this.y / 100) * this.flyCategory) * 100 * this.flyCategory + this.baseX;
+      ((Math.cos((this.y / 100) * this.flyCategory) * score) / 100) * this.flyCategory +
+      this.baseX;
     this.element.style.transform = `translate3d(${this.x}px, ${this.y}px, 0)`;
 
     if (this.y - this.offScreenElementDiscount > spaceContainerHeight || this.life <= 0) {
@@ -175,10 +176,15 @@ class SpecialCharge extends EnemySpaceship {
 }
 
 function createEnemies() {
-  const intervalID = setInterval(() => {
-    enemiesDifficultyLevel =
-      score == 0 ? 1 : Math.ceil(score / pointsToIncrementDifficultyLevel);
+  enemiesDifficultyLevel =
+    score == 0 ? 1 : Math.ceil(score / pointsToIncrementDifficultyLevel);
 
+  const downIntervalTime = Math.max(
+    500,
+    Math.random() * 1000 + 1000 / enemiesDifficultyLevel
+  );
+
+  const intervalID = setInterval(() => {
     let randomTypeEnemy = Math.ceil(Math.random() * 100);
     if (randomTypeEnemy <= 50) {
       randomTypeEnemy = 1; // 50%
@@ -203,7 +209,7 @@ function createEnemies() {
     );
 
     if (isGameOver) clearInterval(intervalID);
-  }, Math.random() * 1000 + 1000 / enemiesDifficultyLevel);
+  }, downIntervalTime);
 }
 
 function animateEnemies() {
@@ -276,7 +282,7 @@ function collisionEnemiesWithSpaceship() {
 
         specialShotIsActive = true;
         shootPower = 100;
-        setPlayerLife(100);
+        // setPlayerLife(100);
         setPlayerScore(2000);
         enemy.removeElement();
 
@@ -438,11 +444,11 @@ gameOverButton.addEventListener("click", () => {
 
 const startSound = new Audio("../audios/aero-fighters.mp3");
 startSound.loop = true;
-startSound.volume = 0;
+startSound.volume = 1;
 startSound.play();
 
 const nextLevelSound = new Audio("../audios/next_level.mp3");
-nextLevelSound.volume = 0;
+nextLevelSound.volume = 1;
 nextLevelSound.play();
 
 spaceshipMove();
