@@ -1,8 +1,6 @@
 function createBodyTableRank() {
   const storageRank = JSON.parse(localStorage.getItem("@spaceshipGame:rank"));
 
-  console.log(storageRank);
-
   let rankSorted;
   if (storageRank) {
     rankSorted = storageRank

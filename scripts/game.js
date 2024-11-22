@@ -444,7 +444,7 @@ gameOverButton.addEventListener("click", () => {
 
 const startSound = new Audio("../audios/aero-fighters.mp3");
 startSound.loop = true;
-startSound.volume = 1;
+startSound.volume = 0.8;
 startSound.play();
 
 const nextLevelSound = new Audio("../audios/next_level.mp3");
