@@ -24,11 +24,13 @@ function createBodyTableRank() {
   }
 }
 
+function backPage() {
+  window.history.back();
+}
+
 const backButton = document.querySelector(".backButton");
 const bodyTableRank = document.querySelector(".tableRank tbody");
 
-backButton.addEventListener("click", () => {
-  window.history.back();
-});
+backButton.addEventListener("click", backPage);
 
 createBodyTableRank();
