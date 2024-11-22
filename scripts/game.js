@@ -439,7 +439,7 @@ document.addEventListener("keydown", gameControls);
 document.addEventListener("keyup", gameControlsCancel);
 
 gameOverButton.addEventListener("click", () => {
-  window.location.replace("/");
+  window.history.back();
 });
 
 const startSound = new Audio("../audios/aero-fighters.mp3");

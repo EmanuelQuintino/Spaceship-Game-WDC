@@ -30,7 +30,7 @@ const backButton = document.querySelector(".backButton");
 const bodyTableRank = document.querySelector(".tableRank tbody");
 
 backButton.addEventListener("click", () => {
-  window.location.replace("/");
+  window.history.back();
 });
 
 createBodyTableRank();
