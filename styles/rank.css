@@ -17,7 +17,7 @@ main {
 h1 {
   font-size: clamp(2.4rem, 4.5vw, 2.4rem);
   text-align: center;
-  color: #e8d141;
+  color: var(--color-secondary-400);
   margin-top: 7.2rem;
 }
 
@@ -31,24 +31,24 @@ table {
 
 th,
 td {
-  border: 2px solid #aaa;
+  border: 2px solid var(--color-light-600);
   padding: 1rem 1.6rem;
 }
 
 th {
-  font-weight: 500;
-  background: #888b;
+  font-weight: 700;
+  background: var(--color-light-700a);
 }
 
 tr {
   transition: background 100ms;
+
+  &:hover {
+    background: var(--color-light-800a);
+  }
 }
 
-tr:hover {
-  background: #8888;
-}
-
-td:nth-child(odd) {
+td:nth-child(2n + 1) {
   text-align: center;
 }
 
