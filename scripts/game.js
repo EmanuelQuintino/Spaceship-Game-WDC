@@ -1,6 +1,6 @@
 const spaceContainer = document.querySelector(".spaceContainer");
 const spaceship = document.querySelector(".spaceship");
-const playerName = document.querySelector(".name");
+const playerName = document.querySelector(".playerName");
 const playerLife = document.querySelector(".life");
 const playerScore = document.querySelector(".score");
 const gameOverButton = document.querySelector(".gameOver button");
