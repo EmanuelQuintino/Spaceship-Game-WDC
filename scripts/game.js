@@ -14,7 +14,7 @@ const spaceshipHeight = spaceship.offsetHeight;
 const spaceshipSpeed = 10; // px to upper
 const shotSpeed = 10; // shoots per second
 const spaceshipDamage = 25; // -25 per shot
-const timeToSpecialShot = 30 * 1000; // 30000ms to the end
+const timeToEndSpecialShot = 30 * 1000; // 30000ms (30s) to the end
 
 let enemies = [];
 let isGameOver = false;
@@ -42,22 +42,22 @@ function spaceshipMove() {
   moveX += positionX * spaceshipSpeed;
   moveY += positionY * spaceshipSpeed;
 
-  const descontScreenLimit = spaceshipWidth / 2;
+  const discountScreenLimit = spaceshipWidth / 2;
 
   // limit X: left, right
   moveX = Math.max(
-    descontScreenLimit,
-    Math.min(moveX, spaceContainerWidth - descontScreenLimit)
+    discountScreenLimit,
+    Math.min(moveX, spaceContainerWidth - discountScreenLimit)
   );
 
   // limit Y: top, bottom
   moveY = Math.max(
-    -descontScreenLimit,
-    Math.min(moveY, spaceContainerHeight - spaceshipHeight - descontScreenLimit)
+    -discountScreenLimit,
+    Math.min(moveY, spaceContainerHeight - spaceshipHeight - discountScreenLimit)
   );
 
-  spaceship.style.left = moveX - descontScreenLimit + "px";
-  spaceship.style.bottom = moveY + descontScreenLimit + "px";
+  spaceship.style.left = moveX - discountScreenLimit + "px";
+  spaceship.style.bottom = moveY + discountScreenLimit + "px";
 
   requestAnimationFrame(spaceshipMove);
 }
@@ -93,7 +93,7 @@ function createShot(className = "shot") {
   }
 }
 
-function spaceshipShoots() {
+function spaceshipShootsRemove() {
   shoots = document.querySelectorAll(".shot");
 
   shoots.forEach((shot) => {
@@ -102,7 +102,7 @@ function spaceshipShoots() {
     });
   });
 
-  requestAnimationFrame(spaceshipShoots);
+  requestAnimationFrame(spaceshipShootsRemove);
 }
 
 class EnemySpaceship {
@@ -289,7 +289,7 @@ function collisionEnemiesWithSpaceship() {
         setTimeout(() => {
           specialShotIsActive = false;
           shootPower = 25;
-        }, timeToSpecialShot);
+        }, timeToEndSpecialShot);
       } else {
         const explosionSound = new Audio("../audios/explosion1.mp3");
         explosionSound.volume = explosionSoundVolume;
@@ -387,7 +387,6 @@ function gameControlsCancel(key) {
     case "KeyW":
     case "KeyS":
       positionY = 0;
-      spaceship.style.transform = "rotate(0deg)";
       break;
     case "ArrowLeft":
     case "ArrowRight":
@@ -452,7 +451,7 @@ nextLevelSound.volume = 1;
 nextLevelSound.play();
 
 spaceshipMove();
-spaceshipShoots();
+spaceshipShootsRemove();
 createEnemies();
 animateEnemies();
 collisionEnemiesShot();
