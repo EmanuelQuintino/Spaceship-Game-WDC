@@ -78,7 +78,11 @@
 }
 
 .enemies {
-  .enemy1,
+  .enemy1 {
+    width: 9rem;
+    height: 9rem;
+  }
+
   .enemy2 {
     width: 9rem;
     height: 9rem;

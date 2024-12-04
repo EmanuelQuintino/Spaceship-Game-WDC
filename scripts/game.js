@@ -16,22 +16,22 @@ const shotSpeed = 10; // shoots per second
 const spaceshipDamage = 25; // -25 per shot
 const timeToEndSpecialShot = 30 * 1000; // 30000ms (30s) to the end
 
+let positionX = 0;
+let positionY = 0;
+let moveX = spaceContainerWidth / 2;
+let moveY = 0;
+
+let canShoot = true;
+let specialShotIsActive = false;
+let shootPower = 25; // lifeEnemy-=shootPower
+
 let enemies = [];
 let isGameOver = false;
 let life = 100;
 let score = 0;
 let explosionSoundVolume = 0.4;
 
-let canShoot = true;
-let specialShotIsActive = false;
-let shootPower = 25; // lifeEnemy-=shootPower
-
-let positionX = 0;
-let positionY = 0;
-let moveX = spaceContainerWidth / 2;
-let moveY = 0;
-
-let enemyX = Math.random() * (spaceContainerWidth - spaceshipWidth);
+let enemyX = Math.random() * spaceContainerWidth;
 let enemyY = 100;
 let enemiesDifficultyLevel = 1;
 let pointsToIncrementDifficultyLevel = 1000; // 1 more level for each step points
@@ -116,7 +116,7 @@ class EnemySpaceship {
     this.y = 0;
     this.baseX = Math.ceil(Math.random() * spaceContainerWidth - spaceshipWidth);
     this.speed = (Math.ceil(Math.random() * 5 + 5) / 10) * enemiesDifficultyLevel; // add 5 in a range
-    this.offScreenElementDiscount = 200; // px
+    this.offScreenTopElementDiscount = 200; // px
     this.#createElement(src, alt, className);
   }
 
@@ -127,7 +127,7 @@ class EnemySpaceship {
     this.element.className = className;
 
     this.element.style.position = "absolute";
-    this.element.style.top = `-${this.offScreenElementDiscount}px`;
+    this.element.style.top = `-${this.offScreenTopElementDiscount}px`;
 
     document.querySelector(".enemies").appendChild(this.element);
   }
@@ -158,7 +158,10 @@ class EnemySpaceship {
       this.baseX;
     this.element.style.transform = `translate3d(${this.x}px, ${this.y}px, 0)`;
 
-    if (this.y - this.offScreenElementDiscount > spaceContainerHeight || this.life <= 0) {
+    if (
+      this.y - this.offScreenTopElementDiscount > spaceContainerHeight ||
+      this.life <= 0
+    ) {
       this.element.remove();
     }
   }
@@ -179,20 +182,21 @@ function createEnemies() {
   enemiesDifficultyLevel =
     score == 0 ? 1 : Math.ceil(score / pointsToIncrementDifficultyLevel);
 
-  const downIntervalTime = Math.max(
-    500,
-    Math.random() * 1000 + 1000 / enemiesDifficultyLevel
+  const delayIntervalTime = Math.max(
+    Math.random() * 1000 + 1000 / enemiesDifficultyLevel,
+    500
   );
 
   const intervalID = setInterval(() => {
-    let randomTypeEnemy = Math.ceil(Math.random() * 100);
-    if (randomTypeEnemy <= 50) {
-      randomTypeEnemy = 1; // 50%
-    } else if (randomTypeEnemy <= 80) {
-      randomTypeEnemy = 2; // 30%
-    } else if (randomTypeEnemy <= 95) {
-      randomTypeEnemy = 3; // 15%
-    } else if (randomTypeEnemy <= 100) {
+    let randomEnemyType = Math.ceil(Math.random() * 100);
+
+    if (randomEnemyType <= 50) {
+      randomEnemyType = 1; // 50%
+    } else if (randomEnemyType <= 80) {
+      randomEnemyType = 2; // 30%
+    } else if (randomEnemyType <= 95) {
+      randomEnemyType = 3; // 15%
+    } else if (randomEnemyType <= 100) {
       enemies.push(
         new SpecialCharge(1, `../images/logo-rj.png`, `logo-rj`, `chargeSpecialShot`)
       ); // 5%
@@ -201,15 +205,15 @@ function createEnemies() {
 
     enemies.push(
       new EnemySpaceship(
-        randomTypeEnemy,
-        `../images/enemy${randomTypeEnemy}.gif`,
-        `enemy${randomTypeEnemy}`,
-        `enemy${randomTypeEnemy}`
+        randomEnemyType,
+        `../images/enemy${randomEnemyType}.gif`,
+        `enemy${randomEnemyType}`,
+        `enemy${randomEnemyType}`
       )
     );
 
     if (isGameOver) clearInterval(intervalID);
-  }, downIntervalTime);
+  }, delayIntervalTime);
 }
 
 function animateEnemies() {
