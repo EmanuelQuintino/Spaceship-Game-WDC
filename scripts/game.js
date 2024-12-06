@@ -31,10 +31,10 @@ let life = 100;
 let score = 0;
 let explosionSoundVolume = 0.4;
 
-let enemyX = Math.random() * spaceContainerWidth;
-let enemyY = 100;
 let enemiesDifficultyLevel = 1;
 let pointsToIncrementDifficultyLevel = 1000; // 1 more level for each step points
+let enemyX = 0;
+let enemyY = 0;
 
 function spaceshipMove() {
   if (isGameOver) return;
@@ -74,7 +74,7 @@ function createShot(className = "shot") {
       shootSound.play();
 
       shot.style.left = moveX + "px";
-      shot.style.bottom = moveY + spaceshipHeight + spaceshipHeight / 8 + "px";
+      shot.style.bottom = moveY + spaceshipHeight + spaceshipHeight / 20 + "px";
     } else {
       const shootSound = new Audio("../audios/shoot.mp3");
       shootSound.volume = 1;
@@ -132,6 +132,21 @@ class EnemySpaceship {
     document.querySelector(".enemies").appendChild(this.element);
   }
 
+  fly() {
+    this.y += this.speed;
+    this.x =
+      ((Math.cos((this.y / 100) * this.flyCategory) * score) / 100) * this.flyCategory +
+      this.baseX;
+    this.element.style.transform = `translate3d(${this.x}px, ${this.y}px, 0)`;
+
+    if (
+      this.y - this.offScreenTopElementDiscount > spaceContainerHeight ||
+      this.life <= 0
+    ) {
+      this.element.remove();
+    }
+  }
+
   destroyEnemySpaceship() {
     this.element.src = `../images/explosion2.gif`;
     enemies = enemies.filter((enemy) => enemy != this);
@@ -149,21 +164,6 @@ class EnemySpaceship {
     setTimeout(() => {
       this.element.remove();
     }, 1000);
-  }
-
-  fly() {
-    this.y += this.speed;
-    this.x =
-      ((Math.cos((this.y / 100) * this.flyCategory) * score) / 100) * this.flyCategory +
-      this.baseX;
-    this.element.style.transform = `translate3d(${this.x}px, ${this.y}px, 0)`;
-
-    if (
-      this.y - this.offScreenTopElementDiscount > spaceContainerHeight ||
-      this.life <= 0
-    ) {
-      this.element.remove();
-    }
   }
 }
 
@@ -187,7 +187,7 @@ function createEnemies() {
     500
   );
 
-  const intervalID = setInterval(() => {
+  const randomEnemyIntervalID = setInterval(() => {
     let randomEnemyType = Math.ceil(Math.random() * 100);
 
     if (randomEnemyType <= 50) {
@@ -212,16 +212,16 @@ function createEnemies() {
       )
     );
 
-    if (isGameOver) clearInterval(intervalID);
+    if (isGameOver) clearInterval(randomEnemyIntervalID);
   }, delayIntervalTime);
 }
 
-function animateEnemies() {
+function animateFlyEnemies() {
   enemies.forEach((enemy) => {
     enemy.fly();
   });
 
-  requestAnimationFrame(animateEnemies);
+  requestAnimationFrame(animateFlyEnemies);
 }
 
 function collisionEnemiesShot() {
@@ -447,7 +447,7 @@ gameOverButton.addEventListener("click", () => {
 
 const startSound = new Audio("../audios/aero-fighters.mp3");
 startSound.loop = true;
-startSound.volume = 0.8;
+startSound.volume = 0.7;
 startSound.play();
 
 const nextLevelSound = new Audio("../audios/next_level.mp3");
@@ -457,7 +457,7 @@ nextLevelSound.play();
 spaceshipMove();
 spaceshipShootsRemove();
 createEnemies();
-animateEnemies();
+animateFlyEnemies();
 collisionEnemiesShot();
 collisionEnemiesWithSpaceship();
 setPlayerName();

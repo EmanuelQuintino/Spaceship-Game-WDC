@@ -16,8 +16,11 @@
   --color-light-800a: #75757588;
   --color-dark-400: #000000;
   --color-primary-400: #056cf2;
+  --color-primary-400a: #056cf288;
   --color-primary-500: #2793f2;
+  --color-primary-500a: #2793f288;
   --color-secondary-400: #e8d141;
+  --color-secondary-400a: #e8d14188;
 }
 
 * {
