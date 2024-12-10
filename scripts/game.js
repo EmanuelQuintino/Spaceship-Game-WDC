@@ -141,10 +141,7 @@ class EnemySpaceship {
       this.baseX;
     this.element.style.transform = `translate3d(${this.x}px, ${this.y}px, 0)`;
 
-    if (
-      this.y - this.offScreenTopElementDiscount > spaceContainerHeight ||
-      this.life <= 0
-    ) {
+    if (this.y - this.offScreenTopElementDiscount > spaceContainerHeight) {
       this.element.remove();
     }
   }
@@ -236,22 +233,22 @@ function collisionEnemiesShot() {
 
     if (enemy.element.className == "chargeSpecialShot") return;
 
-    shootsDOM.forEach((shotDOM) => {
-      const shotRect = shotDOM.getBoundingClientRect();
+    shootsDOM.forEach((shootDOM) => {
+      const shootRect = shootDOM.getBoundingClientRect();
       const enemyRect = enemyDOM.getBoundingClientRect();
 
       let discountCollision = enemy.enemyNumber == 3 ? 40 : 10;
 
       if (
-        enemyRect.left < shotRect.right &&
-        enemyRect.right > shotRect.left &&
-        enemyRect.top + discountCollision < shotRect.bottom &&
-        enemyRect.bottom - discountCollision > shotRect.top
+        enemyRect.left < shootRect.right &&
+        enemyRect.right > shootRect.left &&
+        enemyRect.top + discountCollision < shootRect.bottom &&
+        enemyRect.bottom - discountCollision > shootRect.top
       ) {
-        shotDOM.remove();
+        shootDOM.remove();
         enemy.life -= Math.ceil(shootPower * (Math.random() + 1)); // ex: shootPower * 1.2
-
         setPlayerScore(specialShotIsActive ? 20 : 10);
+
         if (enemy.life <= 0) {
           enemy.destroyEnemySpaceship();
           setPlayerScore(enemy.points);
@@ -297,12 +294,7 @@ function collisionEnemiesWithSpaceship() {
           shootPower = 25;
         }, timeToEndSpecialShot);
       } else {
-        const explosionSound = new Audio("../audios/explosion1.mp3");
-        explosionSound.volume = explosionSoundVolume;
-        explosionSound.play();
-
         enemy.destroyEnemySpaceship();
-
         setPlayerDamage(enemy.damage);
       }
     }
