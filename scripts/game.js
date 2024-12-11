@@ -26,15 +26,14 @@ let specialShotIsActive = false;
 let shootPower = 25; // lifeEnemy-=shootPower
 
 let enemies = [];
+let enemyX = 0;
+let enemyY = 0;
+
 let isGameOver = false;
 let life = 100;
 let score = 0;
 let explosionSoundVolume = 0.4;
-
-let enemiesDifficultyLevel = 1;
-let pointsToIncrementDifficultyLevel = 1000; // 1 more level for each step points
-let enemyX = 0;
-let enemyY = 0;
+let gameLevel = 1;
 
 function spaceshipMove() {
   if (isGameOver) return;
@@ -63,7 +62,7 @@ function spaceshipMove() {
 }
 
 function createShot(className = "shot") {
-  if (canShoot) {
+  if (canShoot && !isGameOver) {
     const shot = document.createElement("div");
     shot.classList.add(className);
 
@@ -113,11 +112,11 @@ class EnemySpaceship {
     this.life = enemyNumber == 1 ? 100 : enemyNumber == 2 ? 300 : 600;
     this.points = enemyNumber == 1 ? 250 : enemyNumber == 2 ? 500 : 1000; // to score
     this.damage = enemyNumber == 1 ? 20 : enemyNumber == 2 ? 30 : 50;
-    this.flyCategory = (Math.random() - 0.5) * 3; // random negative/positive number
+    this.flyCategory = (Math.random() - 0.5) * 5; // random negative/positive number
     this.x = 0;
     this.y = 0;
     this.baseX = Math.ceil(Math.random() * spaceContainerWidth - spaceshipWidth);
-    this.speed = (Math.ceil(Math.random() * 5 + 5) / 10) * enemiesDifficultyLevel; // add 5 in a range
+    this.speed = Math.ceil(Math.random() * 5 + 5) / 20 + gameLevel / 10; // add 5 in a range
     this.offScreenTopElementDiscount = 200; // px
     this.#createElement(src, alt, className);
   }
@@ -137,8 +136,10 @@ class EnemySpaceship {
   fly() {
     this.y += this.speed;
     this.x =
-      ((Math.cos((this.y / 100) * this.flyCategory) * score) / 100) * this.flyCategory +
+      ((Math.cos((this.y / 100) * this.flyCategory) * gameLevel * 1000) / 100) *
+        this.flyCategory +
       this.baseX;
+
     this.element.style.transform = `translate3d(${this.x}px, ${this.y}px, 0)`;
 
     if (this.y - this.offScreenTopElementDiscount > spaceContainerHeight) {
@@ -178,15 +179,13 @@ class SpecialCharge extends EnemySpaceship {
 }
 
 function createEnemies() {
-  enemiesDifficultyLevel =
-    score == 0 ? 1 : Math.ceil(score / pointsToIncrementDifficultyLevel);
-
-  const delayIntervalTime = Math.max(
-    Math.random() * 1000 + 1000 / enemiesDifficultyLevel,
-    500
-  );
+  let delayIntervalTime = 1000;
 
   const randomEnemyIntervalID = setInterval(() => {
+    delayIntervalTime = Math.max(Math.random() * 2000 + 1000 - score / 1000, 500);
+
+    console.log(delayIntervalTime);
+
     let randomEnemyType = Math.ceil(Math.random() * 100);
 
     if (randomEnemyType <= 50) {
@@ -247,11 +246,11 @@ function collisionEnemiesShot() {
       ) {
         shootDOM.remove();
         enemy.life -= Math.ceil(shootPower * (Math.random() + 1)); // ex: shootPower * 1.2
-        setPlayerScore(specialShotIsActive ? 20 : 10);
+        setPlayerScoreAndLevelGame(specialShotIsActive ? 20 : 10);
 
         if (enemy.life <= 0) {
           enemy.destroyEnemySpaceship();
-          setPlayerScore(enemy.points);
+          setPlayerScoreAndLevelGame(enemy.points);
         }
       }
     });
@@ -286,7 +285,7 @@ function collisionEnemiesWithSpaceship() {
         specialShotIsActive = true;
         shootPower = 100;
         // setPlayerLife(100);
-        setPlayerScore(2000);
+        setPlayerScoreAndLevelGame(2000);
         enemy.removeElement();
 
         setTimeout(() => {
@@ -343,9 +342,15 @@ function setPlayerDamage(damage) {
   }
 }
 
-function setPlayerScore(points) {
+function setPlayerScoreAndLevelGame(points) {
   score += points;
   playerScore.innerHTML = String(score).padStart(9, "0");
+
+  const calcLevel = Math.max(Math.floor(score / 10000), 1); // one more level each 10000 points
+
+  if (calcLevel > gameLevel) {
+    gameLevel++;
+  }
 }
 
 function gameControls(key) {
@@ -441,7 +446,7 @@ gameOverButton.addEventListener("click", () => {
 
 const startSound = new Audio("../audios/aero-fighters.mp3");
 startSound.loop = true;
-startSound.volume = 0.7;
+startSound.volume = 0;
 startSound.play();
 
 const nextLevelSound = new Audio("../audios/next_level.mp3");
