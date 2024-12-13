@@ -28,6 +28,7 @@ let shootPower = 25; // lifeEnemy-=shootPower
 let enemies = [];
 let enemyX = 0;
 let enemyY = 0;
+let totalEnemiesDestroyed = 0;
 
 let isGameOver = false;
 let life = 100;
@@ -136,7 +137,8 @@ class EnemySpaceship {
   fly() {
     this.y += this.speed;
     this.x =
-      ((Math.cos((this.y / 100) * this.flyCategory) * gameLevel * 1000) / 100) *
+      ((Math.cos((this.y / 100) * this.flyCategory) * totalEnemiesDestroyed * 100) /
+        100) *
         this.flyCategory +
       this.baseX;
 
@@ -148,6 +150,8 @@ class EnemySpaceship {
   }
 
   destroyEnemySpaceship() {
+    totalEnemiesDestroyed++;
+
     this.element.src = `../images/explosion2.gif`;
     enemies = enemies.filter((enemy) => enemy != this);
 
@@ -183,8 +187,6 @@ function createEnemies() {
 
   const randomEnemyIntervalID = setInterval(() => {
     delayIntervalTime = Math.max(Math.random() * 2000 + 1000 - score / 1000, 500);
-
-    console.log(delayIntervalTime);
 
     let randomEnemyType = Math.ceil(Math.random() * 100);
 
