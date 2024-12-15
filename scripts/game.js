@@ -184,36 +184,34 @@ class SpecialCharge extends EnemySpaceship {
 
 function createEnemies() {
   const randomInterval = Math.max(Math.random() * 1000 + 2000 - score / 100, 500);
-  let randomEnemyType = Math.ceil(Math.random() * 100);
-
-  if (randomEnemyType <= 50) {
-    randomEnemyType = 1; // 50%
-  } else if (randomEnemyType <= 80) {
-    randomEnemyType = 2; // 30%
-  } else if (randomEnemyType <= 95) {
-    randomEnemyType = 3; // 15%
-  } else if (randomEnemyType <= 100) {
-    enemies.push(
-      new SpecialCharge(1, `../images/logo-rj.png`, `logo-rj`, `chargeSpecialShot`)
-    ); // 5%
-
-    setTimeout(() => {
-      if (!isGameOver) createEnemies();
-    }, randomInterval);
-
-    return;
-  }
-
-  enemies.push(
-    new EnemySpaceship(
-      randomEnemyType,
-      `../images/enemy${randomEnemyType}.gif`,
-      `enemy${randomEnemyType}`,
-      `enemy${randomEnemyType}`
-    )
-  );
 
   setTimeout(() => {
+    let randomEnemyType = Math.ceil(Math.random() * 100);
+
+    if (randomEnemyType <= 50) {
+      randomEnemyType = 1; // 50%
+    } else if (randomEnemyType <= 80) {
+      randomEnemyType = 2; // 30%
+    } else if (randomEnemyType <= 95) {
+      randomEnemyType = 3; // 15%
+    } else if (randomEnemyType <= 100) {
+      enemies.push(
+        new SpecialCharge(1, `../images/logo-rj.png`, `logo-rj`, `chargeSpecialShot`)
+      ); // 5%
+
+      if (!isGameOver) createEnemies();
+      return;
+    }
+
+    enemies.push(
+      new EnemySpaceship(
+        randomEnemyType,
+        `../images/enemy${randomEnemyType}.gif`,
+        `enemy${randomEnemyType}`,
+        `enemy${randomEnemyType}`
+      )
+    );
+
     if (!isGameOver) createEnemies();
   }, randomInterval);
 }
