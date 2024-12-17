@@ -106,7 +106,7 @@
   justify-content: center;
   flex-direction: column;
   gap: 2.4rem;
-  background: #0008;
+  background: var(--color-dark-400a);
   height: 100%;
   width: 100%;
   display: none;

@@ -321,29 +321,6 @@ function setPlayerLife(lifePoints) {
   }
 }
 
-function setPlayerDamage(damage) {
-  if (damage) {
-    const criticalDamage = Math.ceil(damage * (Math.random() + 1)); // ex: damage * 1.2
-    life -= criticalDamage;
-  } else {
-    life -= 20;
-  }
-
-  if (life < 30) {
-    playerLife.style.color = "red";
-  }
-
-  const hitSound = new Audio("../audios/hit.mp3");
-  hitSound.volume = 0.8;
-  hitSound.play();
-
-  playerLife.innerHTML = `Nave ${life < 0 ? 0 : life}%`;
-
-  if (life <= 0) {
-    GameOver();
-  }
-}
-
 function setPlayerScoreAndLevelGame(points) {
   score += points;
   playerScore.innerHTML = String(score).padStart(9, "0");
@@ -353,6 +330,63 @@ function setPlayerScoreAndLevelGame(points) {
   if (calcLevel > gameLevel) {
     gameLevel++;
   }
+}
+
+function setPlayerDamage(damage) {
+  const hitSound = new Audio("../audios/hit.mp3");
+  hitSound.volume = 0.8;
+  hitSound.play();
+
+  if (damage) {
+    const criticalDamage = Math.ceil(damage * (Math.random() + 1)); // ex: damage * 1.2
+    life -= criticalDamage;
+  } else {
+    life -= 20;
+  }
+
+  if (life <= 30) {
+    playerLife.style.color = "red";
+  }
+
+  playerLife.innerHTML = `Nave ${life < 0 ? 0 : life}%`;
+
+  if (life <= 0) {
+    GameOver();
+  }
+}
+
+function saveUserScore({ name, score }) {
+  const storageRank = JSON.parse(localStorage.getItem("@spaceshipGame:rank"));
+
+  let rankSorted;
+  if (storageRank) {
+    rankSorted = [...storageRank, { name, score }]
+      .sort((a, b) => b.score - a.score)
+      .filter((_rank, index) => index < 20);
+
+    localStorage.setItem("@spaceshipGame:rank", JSON.stringify([...rankSorted]));
+  } else {
+    localStorage.setItem("@spaceshipGame:rank", JSON.stringify([{ name, score }]));
+  }
+}
+
+function GameOver() {
+  isGameOver = true;
+
+  const gameOverElement = document.querySelector(".gameOver");
+  gameOverElement.style.display = "flex";
+
+  const explosionSound = new Audio("../audios/explosion2.mp3");
+  explosionSound.volume = explosionSoundVolume;
+  explosionSound.play();
+
+  spaceship.style.backgroundImage = `url(../images/explosion2.gif)`;
+
+  setTimeout(() => {
+    spaceship.remove();
+  }, 1000);
+
+  saveUserScore({ name: playerName.innerHTML, score });
 }
 
 function gameControls(key) {
@@ -403,40 +437,6 @@ function gameControlsCancel(key) {
     default:
       break;
   }
-}
-
-function saveUserScore({ name, score }) {
-  const storageRank = JSON.parse(localStorage.getItem("@spaceshipGame:rank"));
-
-  if (storageRank) {
-    localStorage.setItem(
-      "@spaceshipGame:rank",
-      JSON.stringify([...storageRank, { name, score }])
-    );
-  } else {
-    localStorage.setItem("@spaceshipGame:rank", JSON.stringify([{ name, score }]));
-  }
-}
-
-function GameOver() {
-  isGameOver = true;
-
-  const gameOverElement = document.querySelector(".gameOver");
-  gameOverElement.style.display = "flex";
-
-  saveUserScore({ name: playerName.innerHTML, score });
-
-  spaceship.style.backgroundImage = `url(../images/explosion2.gif)`;
-  spaceship.style.backgroundSize = `contain`;
-  spaceship.style.backgroundPosition = `center`;
-
-  const explosionSound = new Audio("../audios/explosion2.mp3");
-  explosionSound.volume = explosionSoundVolume;
-  explosionSound.play();
-
-  setTimeout(() => {
-    spaceship.remove();
-  }, 1000);
 }
 
 document.addEventListener("keydown", gameControls);

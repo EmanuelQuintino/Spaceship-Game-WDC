@@ -4,11 +4,7 @@ function createBodyTableRank() {
   let rankSorted;
   if (storageRank) {
     rankSorted = storageRank
-      .sort((a, b) => {
-        if (a.score < b.score) return 1;
-        if (a.score > b.score) return -1;
-        return 0;
-      })
+      .sort((a, b) => b.score - a.score)
       .filter((_rank, index) => index < 10);
   }
 
