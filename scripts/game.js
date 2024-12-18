@@ -232,7 +232,7 @@ function collisionEnemiesShot() {
     const enemy = enemies.find((enemy) => enemy.element == enemyDOM);
     if (!enemy) return;
 
-    if (enemy.element.className == "chargeSpecialShot") return;
+    if (enemy.element.className == "chargeSpecialShot") return; // not destroy special shot charge
 
     shootsDOM.forEach((shootDOM) => {
       const shootRect = shootDOM.getBoundingClientRect();
