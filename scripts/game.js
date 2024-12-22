@@ -96,7 +96,7 @@ function createShot(className = "shot") {
 }
 
 function spaceshipShootsRemove() {
-  shoots = document.querySelectorAll(".shot");
+  const shoots = document.querySelectorAll(".shot");
 
   shoots.forEach((shot) => {
     shot.addEventListener("animationend", () => {
@@ -116,7 +116,7 @@ class EnemySpaceship {
     this.flyCategory = (Math.random() - 0.5) * 5; // random negative/positive number
     this.x = 0;
     this.y = 0;
-    this.baseX = Math.ceil(Math.random() * spaceContainerWidth - spaceshipWidth);
+    this.baseX = Math.ceil(Math.random() * spaceContainerWidth);
     this.speed = Math.ceil(Math.random() * 5 + 5) / 20 + gameLevel / 10; // add 5 in a range
     this.offScreenTopElementDiscount = 200; // px
     this.#createElement(src, alt, className);
